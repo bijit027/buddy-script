@@ -64,6 +64,16 @@ export default function Navbar() {
                 </svg> <span className="_counting">2</span> 
               </a>
             </li>
+            
+            <li className="nav-item _header_nav_item" style={{ display: 'flex', alignItems: 'center', marginLeft: 16 }}>
+              <button 
+                onClick={handleLogout} 
+                className="_btn1" 
+                style={{ padding: '6px 16px', background: '#e53e3e', color: '#fff', border: 'none', borderRadius: 4, fontWeight: 'bold' }}
+              >
+                Logout
+              </button>
+            </li>
           </ul>
 
           <div className="_header_nav_profile">

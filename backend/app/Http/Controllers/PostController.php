@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Post;
-use App\Models\PostLike;
+use App\Models\Like;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,9 +25,10 @@ class PostController extends Controller
             ->paginate(15);
 
         // Add is_liked_by_me to each post
-        $likedPostIds = PostLike::where('user_id', $userId)
-            ->whereIn('post_id', $posts->pluck('id'))
-            ->pluck('post_id')
+        $likedPostIds = Like::where('user_id', $userId)
+            ->where('likeable_type', Post::class)
+            ->whereIn('likeable_id', $posts->pluck('id'))
+            ->pluck('likeable_id')
             ->toArray();
 
         $posts->getCollection()->transform(function (Post $post) use ($likedPostIds) {
@@ -101,8 +102,9 @@ class PostController extends Controller
         $post   = Post::findOrFail($id);
         $userId = Auth::id();
 
-        $existingLike = PostLike::where('user_id', $userId)
-            ->where('post_id', $id)
+        $existingLike = Like::where('user_id', $userId)
+            ->where('likeable_type', Post::class)
+            ->where('likeable_id', $id)
             ->first();
 
         if ($existingLike) {
@@ -112,7 +114,11 @@ class PostController extends Controller
             $isLiked = false;
         } else {
             // Like
-            PostLike::create(['user_id' => $userId, 'post_id' => $id]);
+            Like::create([
+                'user_id' => $userId,
+                'likeable_id' => $id,
+                'likeable_type' => Post::class,
+            ]);
             $post->increment('likes_count');
             $isLiked = true;
         }

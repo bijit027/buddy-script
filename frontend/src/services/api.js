@@ -25,7 +25,8 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Only redirect to login on 401 if the request was NOT for the login endpoint
+    if (error.response?.status === 401 && !error.config.url.includes('/login')) {
       localStorage.removeItem('bs_token');
       localStorage.removeItem('bs_user');
       window.location.href = '/login';
