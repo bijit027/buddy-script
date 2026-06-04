@@ -2,7 +2,6 @@
 .DS_Store
 *.log
 instruction.md
-Selection Task for Full Stack Engineer at Appifylab/
 
 # Backend
 backend/.env

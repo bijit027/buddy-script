@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->unsignedInteger('likes_count')->default(0);
             $table->unsignedInteger('comments_count')->default(0);
+            $table->boolean('is_public')->default(true);
             $table->timestamps();
         });
     }

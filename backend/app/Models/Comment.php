@@ -12,7 +12,13 @@ class Comment extends Model
     protected $fillable = [
         'user_id',
         'post_id',
+        'parent_id',
         'content',
+        'likes_count',
+    ];
+
+    protected $casts = [
+        'likes_count' => 'integer',
     ];
 
     // Relationships
@@ -24,5 +30,20 @@ class Comment extends Model
     public function post()
     {
         return $this->belongsTo(Post::class);
+    }
+
+    public function likes()
+    {
+        return $this->morphMany(Like::class, 'likeable');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Comment::class, 'parent_id');
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'parent_id');
     }
 }
