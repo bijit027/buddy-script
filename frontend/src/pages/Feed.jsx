@@ -90,72 +90,78 @@ export default function Feed() {
   };
 
   return (
-    <>
+    <div className="_layout _layout_main_wrapper">
       <Navbar />
 
-      <div className="_layout">
-        <div className="container-fluid">
+      <div className="container _custom_container">
+        <div className="_layout_inner_wrap">
           <div className="row">
             {/* Left Sidebar */}
-            <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 _layout_left_sidebar">
-              <LeftSidebar />
+            <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12">
+              <div className="_layout_left_sidebar_wrap">
+                <LeftSidebar />
+              </div>
             </div>
 
             {/* Main Feed Column */}
-            <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 _layout_middle_content">
-              <div className="_middle_content_inner">
-                {/* Stories */}
-                <StoriesBar />
+            <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+              <div className="_layout_middle_wrap">
+                <div className="_layout_middle_inner">
+                  {/* Stories */}
+                  <StoriesBar />
 
-                {/* Create Post */}
-                <CreatePostCard onPostCreated={handlePostCreated} />
+                  {/* Create Post */}
+                  <CreatePostCard onPostCreated={handlePostCreated} />
 
-                {/* Feed List */}
-                <div className="_feed_list" style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 24 }}>
-                  {status === 'loading' ? (
-                    <div style={{ textAlign: 'center', padding: 40 }}>
-                      <span className="_spinner" style={{ display: 'inline-block' }} />
-                    </div>
-                  ) : status === 'error' ? (
-                    <div style={{ textAlign: 'center', color: '#e53e3e', padding: 40 }}>
-                      Failed to load feed. Please try again later.
-                    </div>
-                  ) : (
-                    <>
-                      {data?.pages.map((page) =>
-                        page.data.map((post) => (
-                          <PostCard
-                            key={post.id}
-                            post={post}
-                            onDelete={handlePostDeleted}
-                            onLikeToggle={handleLikeToggle}
-                          />
-                        ))
-                      )}
-
-                      {/* Loading indicator for next page */}
-                      <div ref={ref} style={{ textAlign: 'center', padding: 20 }}>
-                        {isFetchingNextPage ? (
-                          <span className="_spinner" style={{ display: 'inline-block', width: 24, height: 24 }} />
-                        ) : hasNextPage ? (
-                          <span style={{ color: '#65676b' }}>Load more</span>
-                        ) : (
-                          <span style={{ color: '#65676b' }}>You&apos;ve reached the end!</span>
-                        )}
+                  {/* Feed List */}
+                  <div className="_feed_list" style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 24 }}>
+                    {status === 'loading' ? (
+                      <div style={{ textAlign: 'center', padding: 40 }}>
+                        <span className="_spinner" style={{ display: 'inline-block' }} />
                       </div>
-                    </>
-                  )}
+                    ) : status === 'error' ? (
+                      <div style={{ textAlign: 'center', color: '#e53e3e', padding: 40 }}>
+                        Failed to load feed. Please try again later.
+                      </div>
+                    ) : (
+                      <>
+                        {data?.pages.map((page) =>
+                          page.data.map((post) => (
+                            <PostCard
+                              key={post.id}
+                              post={post}
+                              onDelete={handlePostDeleted}
+                              onLikeToggle={handleLikeToggle}
+                            />
+                          ))
+                        )}
+
+                        {/* Loading indicator for next page */}
+                        <div ref={ref} style={{ textAlign: 'center', padding: 20 }}>
+                          {isFetchingNextPage ? (
+                            <span className="_spinner" style={{ display: 'inline-block', width: 24, height: 24 }} />
+                          ) : hasNextPage ? (
+                            <span style={{ color: '#65676b' }}>Load more</span>
+                          ) : (
+                            <span style={{ color: '#65676b' }}>You&apos;ve reached the end!</span>
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Right Sidebar */}
-            <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 _layout_right_sidebar">
-              <RightSidebar />
+            <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12">
+              <div className="_layout_right_sidebar_wrap">
+                <RightSidebar />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
