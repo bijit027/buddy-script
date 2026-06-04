@@ -93,113 +93,190 @@ export default function PostCard({ post, onDelete, onLikeToggle }) {
   };
 
   return (
-    <div className="_post_card" style={{ opacity: isDeleting ? 0.5 : 1 }}>
-      {/* Header */}
-      <div className="_post_card_header">
-        <div className="_post_card_header_left">
-          <img src={post.user.avatar} alt={post.user.name} className="_post_avatar" />
-          <div className="_post_header_txt">
-            <h6 className="_post_name">{post.user.name}</h6>
-            <p className="_post_time">{timeAgo}</p>
+    <div className="_feed_inner_timeline_post_area _b_radious6 _padd_b24 _padd_t24 _mar_b16" style={{ opacity: isDeleting ? 0.5 : 1 }}>
+      <div className="_feed_inner_timeline_content _padd_r24 _padd_l24">
+        <div className="_feed_inner_timeline_post_top">
+          <div className="_feed_inner_timeline_post_box">
+            <div className="_feed_inner_timeline_post_box_image">
+              <img src={post.user.avatar} alt={post.user.name} className="_post_img" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover' }} />
+            </div>
+            <div className="_feed_inner_timeline_post_box_txt">
+              <h4 className="_feed_inner_timeline_post_box_title">{post.user.name}</h4>
+              <p className="_feed_inner_timeline_post_box_para">
+                {timeAgo} . <a href="#0">Public</a>
+              </p>
+            </div>
           </div>
-        </div>
-
-        {/* Action Menu (Delete) */}
-        {isOwner && (
-          <div className="_post_card_header_right" style={{ position: 'relative' }}>
-            <button
-              className="_post_action_btn"
-              onClick={() => setShowMenu(!showMenu)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-            >
-              ⋮
-            </button>
-            {showMenu && (
-              <div style={{
-                position: 'absolute', right: 0, top: '100%', background: 'var(--bs-white, #fff)',
-                border: '1px solid #e4e6ea', borderRadius: 8, padding: '4px 0', zIndex: 10, boxShadow: '0 2px 12px rgba(0,0,0,0.1)'
-              }}>
-                <button
-                  onClick={handleDelete}
-                  style={{ width: '100%', padding: '8px 16px', background: 'none', border: 'none', color: '#e53e3e', cursor: 'pointer', textAlign: 'left', whiteSpace: 'nowrap' }}
+          
+          {isOwner && (
+            <div className="_feed_inner_timeline_post_box_dropdown" style={{ position: 'relative' }}>
+              <div className="_feed_timeline_post_dropdown">
+                <button 
+                  type="button" 
+                  className="_feed_timeline_post_dropdown_link" 
+                  onClick={() => setShowMenu(!showMenu)}
                 >
-                  🗑️ Delete Post
+                  <svg xmlns="http://www.w3.org/2000/svg" width="4" height="17" fill="none" viewBox="0 0 4 17">
+                    <circle cx="2" cy="2" r="2" fill="#C4C4C4" />
+                    <circle cx="2" cy="8" r="2" fill="#C4C4C4" />
+                    <circle cx="2" cy="15" r="2" fill="#C4C4C4" />
+                  </svg>
                 </button>
               </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="_post_card_body">
-        <p className="_post_card_text">{post.content}</p>
-        {post.image && (
-          <div className="_post_card_img_wrap">
-            <img src={post.image} alt="Post" className="_post_card_img" />
-          </div>
-        )}
-      </div>
-
-      {/* Footer Stats */}
-      <div className="_post_card_footer_stats" style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 16px', borderBottom: '1px solid #e4e6ea', color: '#65676b', fontSize: 14 }}>
-        <span>{post.likes_count} Likes</span>
-        <span>{post.comments_count} Comments</span>
-      </div>
-
-      {/* Footer Actions */}
-      <div className="_post_card_footer">
-        <button
-          className={`_post_footer_btn ${post.is_liked_by_me ? '_active' : ''}`}
-          onClick={handleLike}
-          disabled={isLiking}
-          style={{ color: post.is_liked_by_me ? '#1877f2' : 'inherit' }}
-        >
-          {post.is_liked_by_me ? '👍' : '🤍'} Like
-        </button>
-        <button className="_post_footer_btn" onClick={handleToggleComments}>
-          💬 Comment
-        </button>
-        <button className="_post_footer_btn">
-          🔗 Share
-        </button>
-      </div>
-
-      {/* Comments Section */}
-      {showComments && (
-        <div className="_post_comments_wrap" style={{ padding: '16px', borderTop: '1px solid #e4e6ea' }}>
-          <form onSubmit={handleAddComment} style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
-            <img src={user?.avatar} alt={user?.name} style={{ width: 32, height: 32, borderRadius: '50%' }} />
-            <input
-              type="text"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Write a comment..."
-              disabled={isSubmittingComment}
-              style={{ flex: 1, padding: '8px 12px', borderRadius: 20, border: '1px solid #e4e6ea', background: '#f0f2f5', outline: 'none' }}
-            />
-            <button type="submit" disabled={isSubmittingComment || !newComment.trim()} style={{ background: 'none', border: 'none', color: '#1877f2', fontWeight: 600, cursor: 'pointer' }}>
-              Post
-            </button>
-          </form>
-
-          {isLoadingComments ? (
-            <div style={{ textAlign: 'center', padding: 20 }}><span className="_spinner" style={{ width: 24, height: 24, display: 'inline-block' }} /></div>
-          ) : comments.length === 0 ? (
-            <p style={{ textAlign: 'center', color: '#65676b', fontSize: 14 }}>No comments yet. Be the first!</p>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {comments.map((comment) => (
-                <div key={comment.id} style={{ display: 'flex', gap: 8 }}>
-                  <img src={comment.user.avatar} alt={comment.user.name} style={{ width: 32, height: 32, borderRadius: '50%' }} />
-                  <div style={{ background: '#f0f2f5', padding: '8px 12px', borderRadius: 18 }}>
-                    <h6 style={{ margin: 0, fontSize: 13, fontWeight: 600 }}>{comment.user.name}</h6>
-                    <p style={{ margin: 0, fontSize: 14 }}>{comment.content}</p>
-                  </div>
+              
+              {showMenu && (
+                <div className="_feed_timeline_dropdown _timeline_dropdown" style={{ display: 'block', position: 'absolute', right: 0, top: '100%', zIndex: 10 }}>
+                  <ul className="_feed_timeline_dropdown_list">
+                    <li className="_feed_timeline_dropdown_item">
+                      <a href="#0" onClick={(e) => { e.preventDefault(); handleDelete(); }} className="_feed_timeline_dropdown_link">
+                        <span>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
+                            <path stroke="#1890FF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.2" d="M2.25 4.5h13.5M6 4.5V3a1.5 1.5 0 011.5-1.5h3A1.5 1.5 0 0112 3v1.5m2.25 0V15a1.5 1.5 0 01-1.5 1.5h-7.5a1.5 1.5 0 01-1.5-1.5V4.5h10.5zM7.5 8.25v4.5M10.5 8.25v4.5"/>
+                          </svg>										
+                        </span>
+                        Delete Post	
+                      </a>
+                    </li>
+                  </ul>
                 </div>
-              ))}
+              )}
             </div>
           )}
+        </div>
+        
+        <h4 className="_feed_inner_timeline_post_title" style={{ fontWeight: 'normal', fontSize: 16 }}>{post.content}</h4>
+        
+        {post.image && (
+          <div className="_feed_inner_timeline_image" style={{ marginTop: 16 }}>
+            <img src={post.image} alt="Post" className="_time_img" style={{ width: '100%', borderRadius: 8 }} />
+          </div>
+        )}
+      </div>
+
+      <div className="_feed_inner_timeline_total_reacts _padd_r24 _padd_l24 _mar_b26" style={{ marginTop: 16 }}>
+        <div className="_feed_inner_timeline_total_reacts_image">
+          <img src="/assets/images/react_img1.png" alt="Like" className="_react_img1" />
+          <p className="_feed_inner_timeline_total_reacts_para" style={{ marginLeft: 6 }}>{post.likes_count}</p>
+        </div>
+        <div className="_feed_inner_timeline_total_reacts_txt">
+          <p className="_feed_inner_timeline_total_reacts_para1">
+            <a href="#0" onClick={(e) => { e.preventDefault(); handleToggleComments(); }}><span>{post.comments_count}</span> Comment{post.comments_count !== 1 ? 's' : ''}</a>
+          </p>
+        </div>
+      </div>
+
+      <div className="_feed_inner_timeline_reaction">
+        <button 
+          className={`_feed_inner_timeline_reaction_emoji _feed_reaction ${post.is_liked_by_me ? '_feed_reaction_active' : ''}`}
+          onClick={handleLike}
+          disabled={isLiking}
+        >
+          <span className="_feed_inner_timeline_reaction_link"> 
+            <span>
+              {post.is_liked_by_me ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="none" viewBox="0 0 19 19">
+                  <path fill="#FFCC4D" d="M9.5 19a9.5 9.5 0 100-19 9.5 9.5 0 000 19z"/>
+                  <path fill="#664500" d="M9.5 11.083c-1.912 0-3.181-.222-4.75-.527-.358-.07-1.056 0-1.056 1.055 0 2.111 2.425 4.75 5.806 4.75 3.38 0 5.805-2.639 5.805-4.75 0-1.055-.697-1.125-1.055-1.055-1.57.305-2.838.527-4.75.527z"/>
+                  <path fill="#fff" d="M4.75 11.611s1.583.528 4.75.528 4.75-.528 4.75-.528-1.056 2.111-4.75 2.111-4.75-2.11-4.75-2.11z"/>
+                  <path fill="#664500" d="M6.333 8.972c.729 0 1.32-.827 1.32-1.847s-.591-1.847-1.32-1.847c-.729 0-1.32.827-1.32 1.847s.591 1.847 1.32 1.847zM12.667 8.972c.729 0 1.32-.827 1.32-1.847s-.591-1.847-1.32-1.847c-.729 0-1.32.827-1.32 1.847s.591 1.847 1.32 1.847z"/>
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+              )}
+              {post.is_liked_by_me ? ' Liked' : ' Like'}
+            </span>
+          </span>
+        </button>
+        <button className="_feed_inner_timeline_reaction_comment _feed_reaction" onClick={handleToggleComments}>
+          <span className="_feed_inner_timeline_reaction_link"> 
+            <span>
+              <svg className="_reaction_svg" xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21">
+                <path stroke="#000" d="M1 10.5c0-.464 0-.696.009-.893A9 9 0 019.607 1.01C9.804 1 10.036 1 10.5 1v0c.464 0 .696 0 .893.009a9 9 0 018.598 8.598c.009.197.009.429.009.893v6.046c0 1.36 0 2.041-.317 2.535a2 2 0 01-.602.602c-.494.317-1.174.317-2.535.317H10.5c-.464 0-.696 0-.893-.009a9 9 0 01-8.598-8.598C1 11.196 1 10.964 1 10.5v0z"/>
+                <path stroke="#000" strokeLinecap="round" strokeLinejoin="round" d="M6.938 9.313h7.125M10.5 14.063h3.563"/>
+              </svg>                                                      
+              Comment
+            </span>
+          </span>
+        </button>
+        <button className="_feed_inner_timeline_reaction_share _feed_reaction">
+          <span className="_feed_inner_timeline_reaction_link"> 
+            <span>
+              <svg className="_reaction_svg" xmlns="http://www.w3.org/2000/svg" width="24" height="21" fill="none" viewBox="0 0 24 21">
+                <path stroke="#000" strokeLinejoin="round" d="M23 10.5L12.917 1v5.429C3.267 6.429 1 13.258 1 20c2.785-3.52 5.248-5.429 11.917-5.429V20L23 10.5z"/>
+              </svg>                                                 
+              Share
+            </span>
+          </span>
+        </button>
+      </div>
+
+      {showComments && (
+        <div className="_feed_inner_timeline_cooment_area" style={{ marginTop: 16 }}> 
+          <div className="_feed_inner_comment_box">
+            <form className="_feed_inner_comment_box_form" onSubmit={handleAddComment}>
+              <div className="_feed_inner_comment_box_content">
+                <div className="_feed_inner_comment_box_content_image">
+                  <img 
+                    src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff`} 
+                    alt={user?.name} 
+                    className="_comment_img" 
+                  />
+                </div>
+                <div className="_feed_inner_comment_box_content_txt" style={{ flex: 1 }}>
+                  <textarea 
+                    className="form-control _comment_textarea" 
+                    placeholder="Write a comment..." 
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    disabled={isSubmittingComment}
+                    style={{ height: 44, paddingTop: 10, borderRadius: 20 }}
+                  ></textarea>
+                </div>
+              </div>
+              <div className="_feed_inner_comment_box_icon" style={{ display: 'flex', alignItems: 'center' }}>
+                <button 
+                  type="submit" 
+                  className="_feed_inner_comment_box_icon_btn" 
+                  disabled={isSubmittingComment || !newComment.trim()}
+                  style={{ background: 'none', border: 'none', padding: '0 8px', color: '#1877f2', fontWeight: 600 }}
+                >
+                  Post
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <div className="_timline_comment_main" style={{ marginTop: 16, padding: '0 16px' }}>
+            {isLoadingComments ? (
+              <div style={{ textAlign: 'center', padding: 20 }}><span className="_spinner" style={{ width: 24, height: 24, display: 'inline-block' }} /></div>
+            ) : comments.length === 0 ? (
+              <p style={{ textAlign: 'center', color: '#65676b', fontSize: 14 }}>No comments yet.</p>
+            ) : (
+              comments.map((comment) => (
+                <div key={comment.id} className="_comment_main" style={{ marginBottom: 16 }}>
+                  <div className="_comment_image">
+                    <a href="#0" className="_comment_image_link">
+                      <img src={comment.user.avatar} alt={comment.user.name} className="_comment_img1" />
+                    </a>
+                  </div>
+                  <div className="_comment_area">
+                    <div className="_comment_details">
+                      <div className="_comment_details_top">
+                        <div className="_comment_name">
+                          <a href="#0">
+                            <h4 className="_comment_name_title">{comment.user.name}</h4>
+                          </a>
+                        </div>
+                      </div>
+                      <div className="_comment_status">
+                        <p className="_comment_status_text"><span>{comment.content}</span></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       )}
     </div>
