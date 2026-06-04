@@ -21,6 +21,10 @@ class PostController extends Controller
         $userId = Auth::id();
 
         $posts = Post::with('user')
+            ->where(function ($query) use ($userId) {
+                $query->where('is_public', true)
+                      ->orWhere('user_id', $userId);
+            })
             ->latest()
             ->paginate(15);
 
@@ -44,8 +48,9 @@ class PostController extends Controller
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'content' => ['required', 'string', 'max:5000'],
-            'image'   => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif', 'max:5120'],
+            'content'   => ['required', 'string', 'max:5000'],
+            'image'     => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif', 'max:5120'],
+            'is_public' => ['required', 'boolean'],
         ]);
 
         $imagePath = null;
@@ -63,9 +68,10 @@ class PostController extends Controller
         }
 
         $post = Post::create([
-            'user_id' => Auth::id(),
-            'content' => strip_tags($request->content),
-            'image'   => $imagePath,
+            'user_id'   => Auth::id(),
+            'content'   => strip_tags($request->content),
+            'image'     => $imagePath,
+            'is_public' => $request->boolean('is_public'),
         ]);
 
         $post->load('user');
@@ -200,6 +206,7 @@ class PostController extends Controller
             'likes_count'     => $post->likes_count,
             'comments_count'  => $post->comments_count,
             'is_liked_by_me'  => $isLikedByMe,
+            'is_public'       => (bool)$post->is_public,
             'created_at'      => $post->created_at,
             'user'            => [
                 'id'     => $post->user->id,

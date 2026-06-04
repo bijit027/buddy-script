@@ -103,7 +103,7 @@ export default function PostCard({ post, onDelete, onLikeToggle }) {
             <div className="_feed_inner_timeline_post_box_txt">
               <h4 className="_feed_inner_timeline_post_box_title">{post.user.name}</h4>
               <p className="_feed_inner_timeline_post_box_para">
-                {timeAgo} . <a href="#0">Public</a>
+                {timeAgo} . <a href="#0">{post.is_public ? 'Public' : 'Private'}</a>
               </p>
             </div>
           </div>

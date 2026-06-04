@@ -8,6 +8,7 @@ export default function CreatePostCard({ onPostCreated }) {
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [isPublic, setIsPublic] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const fileRef = useRef(null);
 
@@ -39,6 +40,7 @@ export default function CreatePostCard({ onPostCreated }) {
     try {
       const formData = new FormData();
       formData.append('content', content.trim());
+      formData.append('is_public', isPublic ? '1' : '0');
       if (image) formData.append('image', image);
 
       const res = await postService.createPost(formData);
@@ -133,7 +135,16 @@ export default function CreatePostCard({ onPostCreated }) {
             </div>
           </div>
           
-          <div className="_feed_inner_text_area_btn">
+          <div className="_feed_inner_text_area_btn" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <select 
+              value={isPublic ? '1' : '0'} 
+              onChange={(e) => setIsPublic(e.target.value === '1')}
+              style={{ padding: '6px 12px', borderRadius: 20, border: '1px solid #ccd0d5', background: '#e4e6eb', fontSize: 13, fontWeight: 500, color: '#050505', outline: 'none', cursor: 'pointer' }}
+              disabled={isLoading}
+            >
+              <option value="1">🌎 Public</option>
+              <option value="0">🔒 Private</option>
+            </select>
             <button 
               type="submit" 
               className="_feed_inner_text_area_btn_link"
