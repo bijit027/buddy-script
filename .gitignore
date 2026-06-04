@@ -1,0 +1,26 @@
+# Root
+.DS_Store
+*.log
+instruction.md
+Selection Task for Full Stack Engineer at Appifylab/
+
+# Backend
+backend/.env
+backend/.env.backup
+backend/.env.production
+backend/vendor/
+backend/storage/app/public/*
+!backend/storage/app/public/.gitignore
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/storage/logs/*
+backend/bootstrap/cache/*.php
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+frontend/.eslintcache
