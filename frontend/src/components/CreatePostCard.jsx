@@ -62,70 +62,96 @@ export default function CreatePostCard({ onPostCreated }) {
   };
 
   return (
-    <div className="_create_post_card">
-      <div className="_create_post_top">
-        <img
-          src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff`}
-          alt={user?.name}
-          className="_create_post_avatar"
-        />
-        <form className="_create_post_form" onSubmit={handleSubmit} style={{ flex: 1 }}>
-          <textarea
-            id="create_post_input"
-            className="_create_post_input"
-            placeholder={`What's on your mind, ${user?.name?.split(' ')[0]}?`}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={content.length > 100 ? 4 : 2}
-            disabled={isLoading}
-          />
+    <div className="_feed_inner_text_area _b_radious6 _padd_b24 _padd_t24 _padd_r24 _padd_l24 _mar_b16">
+      <form onSubmit={handleSubmit}>
+        <div className="_feed_inner_text_area_box">
+          <div className="_feed_inner_text_area_box_image">
+            <img 
+              src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff`} 
+              alt={user?.name} 
+              className="_txt_img" 
+              style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover' }}
+            />
+          </div>
+          <div className="form-floating _feed_inner_text_area_box_form ">
+            <textarea 
+              className="form-control _textarea" 
+              placeholder="Leave a comment here" 
+              id="floatingTextarea"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              disabled={isLoading}
+              style={{ height: content.length > 100 ? '100px' : '60px' }}
+            ></textarea>
+            <label className="_feed_textarea_label" htmlFor="floatingTextarea">
+              {!content && `What's on your mind, ${user?.name?.split(' ')[0]}?`}
+            </label>
+          </div>
+        </div>
 
-          {imagePreview && (
-            <div className="_create_post_preview" style={{ position: 'relative', marginTop: 8 }}>
-              <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', borderRadius: 8, maxHeight: 300, objectFit: 'cover' }} />
-              <button
-                type="button"
-                onClick={removeImage}
-                style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(0,0,0,.6)', color: '#fff', border: 'none', borderRadius: '50%', width: 28, height: 28, cursor: 'pointer', fontSize: 16 }}
-              >
-                ×
-              </button>
-            </div>
-          )}
-
-          <div className="_create_post_actions">
+        {imagePreview && (
+          <div className="_create_post_preview" style={{ position: 'relative', marginTop: 16, marginBottom: 16, textAlign: 'center' }}>
+            <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', borderRadius: 8, maxHeight: 300, objectFit: 'cover' }} />
             <button
               type="button"
-              className="_create_post_action_btn"
-              onClick={() => fileRef.current?.click()}
-              disabled={isLoading}
+              onClick={removeImage}
+              style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,.6)', color: '#fff', border: 'none', borderRadius: '50%', width: 28, height: 28, cursor: 'pointer', fontSize: 16 }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" strokeWidth="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="1.5" />
-              </svg>
-              <span>Photo</span>
-            </button>
-            <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/gif" onChange={handleImageChange} style={{ display: 'none' }} id="post_image_input" />
-
-            <button type="button" className="_create_post_action_btn" disabled={isLoading}>
-              <span style={{ fontSize: 20 }}>😊</span>
-              <span>Feeling</span>
-            </button>
-
-            <button
-              id="create_post_submit"
-              type="submit"
-              className="_create_post_submit_btn _btn1"
-              disabled={isLoading || (!content.trim() && !image)}
-              style={{ marginLeft: 'auto', opacity: isLoading ? 0.7 : 1, display: 'flex', alignItems: 'center', gap: 6 }}
-            >
-              {isLoading && <span className="_spinner" style={{ width: 14, height: 14, borderWidth: 2 }} />}
-              {isLoading ? 'Posting...' : 'Post'}
+              ×
             </button>
           </div>
-        </form>
-      </div>
+        )}
+
+        <div className="_feed_inner_text_area_bottom">
+          <div className="_feed_inner_text_area_item">
+            <div className="_feed_inner_text_area_bottom_photo _feed_common">
+              <button 
+                type="button" 
+                className="_feed_inner_text_area_bottom_photo_link"
+                onClick={() => fileRef.current?.click()}
+                disabled={isLoading}
+              > 
+                <span className="_feed_inner_text_area_bottom_photo_iamge _mar_img"> 
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 20 20">
+                    <path fill="#666" d="M13.916 0c3.109 0 5.18 2.429 5.18 5.914v8.17c0 3.486-2.072 5.916-5.18 5.916H5.999C2.89 20 .827 17.572.827 14.085v-8.17C.827 2.43 2.897 0 6 0h7.917zm0 1.504H5.999c-2.321 0-3.799 1.735-3.799 4.41v8.17c0 2.68 1.472 4.412 3.799 4.412h7.917c2.328 0 3.807-1.734 3.807-4.411v-8.17c0-2.678-1.478-4.411-3.807-4.411zm.65 8.68l.12.125 1.9 2.147a.803.803 0 01-.016 1.063.642.642 0 01-.894.058l-.076-.074-1.9-2.148a.806.806 0 00-1.205-.028l-.074.087-2.04 2.717c-.722.963-2.02 1.066-2.86.26l-.111-.116-.814-.91a.562.562 0 00-.793-.07l-.075.073-1.4 1.617a.645.645 0 01-.97.029.805.805 0 01-.09-.977l.064-.086 1.4-1.617c.736-.852 1.95-.897 2.734-.137l.114.12.81.905a.587.587 0 00.861.033l.07-.078 2.04-2.718c.81-1.08 2.27-1.19 3.205-.275zM6.831 4.64c1.265 0 2.292 1.125 2.292 2.51 0 1.386-1.027 2.511-2.292 2.511S4.54 8.537 4.54 7.152c0-1.386 1.026-2.51 2.291-2.51zm0 1.504c-.507 0-.918.451-.918 1.007 0 .555.411 1.006.918 1.006.507 0 .919-.451.919-1.006 0-.556-.412-1.007-.919-1.007z"/>
+                  </svg>
+                </span>
+                Photo
+              </button>
+              <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/gif" onChange={handleImageChange} style={{ display: 'none' }} id="post_image_input" />
+            </div>
+            
+            <div className="_feed_inner_text_area_bottom_video _feed_common">
+              <button type="button" className="_feed_inner_text_area_bottom_photo_link" disabled={isLoading}> 
+                <span className="_feed_inner_text_area_bottom_photo_iamge _mar_img">   
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="24" fill="none" viewBox="0 0 22 24">
+                    <path fill="#666" d="M11.485 4.5c2.213 0 3.753 1.534 3.917 3.784l2.418-1.082c1.047-.468 2.188.327 2.271 1.533l.005.141v6.64c0 1.237-1.103 2.093-2.155 1.72l-.121-.047-2.418-1.083c-.164 2.25-1.708 3.785-3.917 3.785H5.76c-2.343 0-3.932-1.72-3.932-4.188V8.688c0-2.47 1.589-4.188 3.932-4.188h5.726zm0 1.5H5.76C4.169 6 3.197 7.05 3.197 8.688v7.015c0 1.636.972 2.688 2.562 2.688h5.726c1.586 0 2.562-1.054 2.562-2.688v-.686-6.329c0-1.636-.973-2.688-2.562-2.688zM18.4 8.57l-.062.02-2.921 1.306v4.596l2.921 1.307c.165.073.343-.036.38-.215l.008-.07V8.876c0-.195-.16-.334-.326-.305z"/>
+                  </svg>    
+                </span>
+                Video
+              </button>
+            </div>
+          </div>
+          
+          <div className="_feed_inner_text_area_btn">
+            <button 
+              type="submit" 
+              className="_feed_inner_text_area_btn_link"
+              disabled={isLoading || (!content.trim() && !image)}
+              style={{ opacity: (isLoading || (!content.trim() && !image)) ? 0.6 : 1 }}
+            >
+              {isLoading ? (
+                <span className="_spinner" style={{ width: 14, height: 14, borderWidth: 2, marginRight: 6, display: 'inline-block' }} />
+              ) : (
+                <svg className="_mar_img" xmlns="http://www.w3.org/2000/svg" width="14" height="13" fill="none" viewBox="0 0 14 13">
+                  <path fill="#fff" fillRule="evenodd" d="M6.37 7.879l2.438 3.955a.335.335 0 00.34.162c.068-.01.23-.05.289-.247l3.049-10.297a.348.348 0 00-.09-.35.341.341 0 00-.34-.088L1.75 4.03a.34.34 0 00-.247.289.343.343 0 00.16.347L5.666 7.17 9.2 3.597a.5.5 0 01.712.703L6.37 7.88zM9.097 13c-.464 0-.89-.236-1.14-.641L5.372 8.165l-4.237-2.65a1.336 1.336 0 01-.622-1.331c.074-.536.441-.96.957-1.112L11.774.054a1.347 1.347 0 011.67 1.682l-3.05 10.296A1.332 1.332 0 019.098 13z" clipRule="evenodd" />
+                </svg>
+              )}
+              <span>Post</span> 
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   );
 }
