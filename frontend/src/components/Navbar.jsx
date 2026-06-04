@@ -15,8 +15,8 @@ export default function Navbar() {
   };
 
   return (
-    <div className="_main_layout">
-      <div className="container-fluid">
+    <div className="_layout_header">
+      <div className="container-fluid _custom_container_fluid">
         <div className="row align-items-center">
           {/* Logo */}
           <div className="col-auto">
