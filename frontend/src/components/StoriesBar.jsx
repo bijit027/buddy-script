@@ -3,8 +3,8 @@ import { useAuth } from '../context/AuthContext';
 const DEMO_STORIES = [
   { id: 1, name: 'Your Story', avatar: null, isAdd: true },
   { id: 2, name: 'Alex J.',    avatar: '/assets/images/profile-1.png', bg: '#4f46e5' },
-  { id: 3, name: 'Maria G.',   avatar: '/assets/images/profile-2.png', bg: '#059669' },
-  { id: 4, name: 'James W.',   avatar: '/assets/images/profile-3.png', bg: '#dc2626' },
+  { id: 3, name: 'Maria G.',   avatar: '/assets/images/man.png', bg: '#059669' },
+  { id: 4, name: 'James W.',   avatar: '/assets/images/profile.png', bg: '#dc2626' },
   { id: 5, name: 'Priya S.',   avatar: '/assets/images/profile-1.png', bg: '#d97706' },
 ];
 

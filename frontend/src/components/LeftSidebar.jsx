@@ -9,7 +9,7 @@ export default function LeftSidebar() {
       <div className="_left_sidebar_profile">
         <div className="_left_sidebar_profile_cover">
           <img
-            src={user?.cover_photo || '/assets/images/cover.jpg'}
+            src={user?.cover_photo || '/assets/images/profile-cover-img.png'}
             alt="Cover"
             className="_profile_cover_img"
             onError={(e) => { e.target.style.display = 'none'; }}

@@ -1,7 +1,7 @@
 const SUGGESTED_PEOPLE = [
   { id: 1, name: 'Sarah Connor', mutual: 12, avatar: '/assets/images/profile-1.png' },
-  { id: 2, name: 'John Martinez', mutual: 8,  avatar: '/assets/images/profile-2.png' },
-  { id: 3, name: 'Emily Chen',   mutual: 5,  avatar: '/assets/images/profile-3.png' },
+  { id: 2, name: 'John Martinez', mutual: 8,  avatar: '/assets/images/man.png' },
+  { id: 3, name: 'Emily Chen',   mutual: 5,  avatar: '/assets/images/profile.png' },
 ];
 
 const TRENDING = [
