@@ -87,9 +87,7 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        if ($post->user_id !== Auth::id()) {
-            return response()->json(['message' => 'Forbidden. You can only edit your own posts.'], 403);
-        }
+        $this->authorize('update', $post);
 
         if ($request->has('content')) {
             $post->content = strip_tags($request->content);
@@ -137,9 +135,7 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        if ($post->user_id !== Auth::id()) {
-            return response()->json(['message' => 'Forbidden. You can only delete your own posts.'], 403);
-        }
+        $this->authorize('delete', $post);
 
         // Delete image from storage
         if ($post->image) {
@@ -325,6 +321,19 @@ class PostController extends Controller
     }
 
     /**
+<<<<<<< Updated upstream
+=======
+     * Block access to private posts unless the authenticated user is the author.
+     */
+    private function denyUnlessCanViewPost(Post $post): ?JsonResponse
+    {
+        $this->authorize('view', $post);
+
+        return null;
+    }
+
+    /**
+>>>>>>> Stashed changes
      * Consistent post format for all responses.
      */
     private function formatPost(Post $post, bool $isLikedByMe): array
