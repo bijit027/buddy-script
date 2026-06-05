@@ -138,6 +138,25 @@ class PostController extends Controller
     }
 
     /**
+     * Get all users who liked a post.
+     */
+    public function getLikes(int $id): JsonResponse
+    {
+        $post = Post::findOrFail($id);
+        
+        $likes = $post->likes()->with('user')->latest()->get()->map(function($l) {
+            return [
+                'id' => $l->user->id,
+                'name' => $l->user->full_name,
+                'avatar' => $l->user->avatar_url,
+            ];
+        });
+
+        return response()->json($likes);
+    }
+
+
+    /**
      * Add a comment to a post.
      */
     public function addComment(Request $request, int $id): JsonResponse

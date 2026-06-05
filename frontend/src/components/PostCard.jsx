@@ -14,6 +14,9 @@ export default function PostCard({ post, onDelete, onLikeToggle }) {
   const [newComment, setNewComment] = useState('');
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showLikesModal, setShowLikesModal] = useState(false);
+  const [fullLikesList, setFullLikesList] = useState([]);
+  const [isLoadingLikes, setIsLoadingLikes] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const isOwner = user?.id === post.user.id;
@@ -42,6 +45,21 @@ export default function PostCard({ post, onDelete, onLikeToggle }) {
       onLikeToggle(post.id, { is_liked_by_me: prevLiked, likes_count: prevCount });
     } finally {
       setIsLiking(false);
+    }
+  };
+
+  const fetchLikes = async () => {
+    setShowLikesModal(true);
+    if (fullLikesList.length === 0) {
+      setIsLoadingLikes(true);
+      try {
+        const res = await postService.getPostLikes(post.id);
+        setFullLikesList(res.data);
+      } catch(err) {
+        toast.error('Failed to load likes');
+      } finally {
+        setIsLoadingLikes(false);
+      }
     }
   };
 
@@ -161,7 +179,7 @@ export default function PostCard({ post, onDelete, onLikeToggle }) {
       </div>
 
       <div className="_feed_inner_timeline_total_reacts _padd_r24 _padd_l24 _mar_b26" style={{ marginTop: 16 }}>
-        <div className="_feed_inner_timeline_total_reacts_image" style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="_feed_inner_timeline_total_reacts_image" onClick={fetchLikes} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
           <img src="/assets/images/react_img1.png" alt="Like" className="_react_img1" style={{ position: 'relative', zIndex: 10 }} />
           {post.recent_likes && post.recent_likes.length > 0 ? (
             <>
@@ -283,6 +301,33 @@ export default function PostCard({ post, onDelete, onLikeToggle }) {
                 />
               ))
             )}
+          </div>
+        </div>
+      )}
+
+      {showLikesModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: '#fff', borderRadius: 8, width: 400, maxWidth: '90%', maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e5e5', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>Likes</h3>
+              <button onClick={() => setShowLikesModal(false)} style={{ background: 'none', border: 'none', fontSize: 24, cursor: 'pointer', color: '#65676b' }}>&times;</button>
+            </div>
+            <div style={{ padding: 20, overflowY: 'auto' }}>
+              {isLoadingLikes ? (
+                <div style={{ textAlign: 'center', padding: 20, color: '#65676b' }}>Loading...</div>
+              ) : fullLikesList.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: 20, color: '#65676b' }}>No likes yet.</div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {fullLikesList.map(liker => (
+                    <div key={liker.id} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <img src={liker.avatar} alt={liker.name} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />
+                      <span style={{ fontWeight: 600, color: '#050505', fontSize: 15 }}>{liker.name}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
