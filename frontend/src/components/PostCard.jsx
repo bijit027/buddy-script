@@ -45,23 +45,30 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle }) {
     if (isLiking) return;
     setIsLiking(true);
 
-    // Optimistic update
     const prevLiked = post.is_liked_by_me;
     const prevCount = post.likes_count;
+    const prevRecentLikes = post.recent_likes || [];
+
+    const nextRecentLikes = !prevLiked
+      ? [{ id: user.id, name: user.name, avatar: user.avatar }, ...prevRecentLikes.filter((l) => l.id !== user.id)].slice(0, 3)
+      : prevRecentLikes.filter((l) => l.id !== user.id);
 
     onLikeToggle(post.id, {
       is_liked_by_me: !prevLiked,
       likes_count: prevLiked ? prevCount - 1 : prevCount + 1,
+      recent_likes: nextRecentLikes,
     });
 
     try {
       const res = await postService.likePost(post.id);
-      // Sync exact count from server
       onLikeToggle(post.id, res.data);
     } catch (err) {
       toast.error('Failed to like post.');
-      // Revert
-      onLikeToggle(post.id, { is_liked_by_me: prevLiked, likes_count: prevCount });
+      onLikeToggle(post.id, {
+        is_liked_by_me: prevLiked,
+        likes_count: prevCount,
+        recent_likes: prevRecentLikes,
+      });
     } finally {
       setIsLiking(false);
     }
@@ -291,29 +298,35 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle }) {
       </div>
 
       <div className="_feed_inner_timeline_total_reacts _padd_r24 _padd_l24 _mar_b26" style={{ marginTop: 16 }}>
-        <div className="_feed_inner_timeline_total_reacts_image" onClick={fetchLikes} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-          <img src="/assets/images/react_img1.png" alt="Like" className="_react_img1" style={{ position: 'relative', zIndex: 10 }} />
-          {post.recent_likes && post.recent_likes.length > 0 ? (
-            <>
-              {post.recent_likes.map((liker, idx) => (
-                <img 
-                  key={liker.id} 
-                  src={liker.avatar} 
-                  alt={liker.name} 
-                  title={liker.name}
-                  className="_react_img"
-                  style={{ objectFit: 'cover', position: 'relative', zIndex: 9 - idx }} 
-                />
-              ))}
-              <span style={{ marginLeft: 8, fontSize: 14, color: '#65676b' }}>
-                Liked by <strong>{post.recent_likes[0].name}</strong> {post.likes_count > 1 ? `and ${post.likes_count - 1} others` : ''}
-              </span>
-            </>
-          ) : post.likes_count > 0 ? (
-            <p className="_feed_inner_timeline_total_reacts_para" style={{ position: 'relative', zIndex: 9 }}>{post.likes_count}</p>
-          ) : null}
-        </div>
-        <div className="_feed_inner_timeline_total_reacts_txt">
+        {post.likes_count > 0 ? (
+          <div className="_feed_inner_timeline_total_reacts_image" onClick={fetchLikes} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+            {post.recent_likes && post.recent_likes.length > 0 ? (
+              <>
+                {post.recent_likes.map((liker, idx) => (
+                  <img
+                    key={liker.id}
+                    src={liker.avatar}
+                    alt={liker.name}
+                    title={liker.name}
+                    className="_react_img"
+                    style={{
+                      objectFit: 'cover',
+                      position: 'relative',
+                      zIndex: post.recent_likes.length - idx,
+                      marginLeft: idx === 0 ? 0 : -16,
+                    }}
+                  />
+                ))}
+                <span style={{ marginLeft: 8, fontSize: 14, color: '#65676b' }}>
+                  Liked by <strong>{post.recent_likes[0].name}</strong> {post.likes_count > 1 ? `and ${post.likes_count - 1} others` : ''}
+                </span>
+              </>
+            ) : (
+              <p className="_feed_inner_timeline_total_reacts_para" style={{ marginLeft: 0 }}>{post.likes_count}</p>
+            )}
+          </div>
+        ) : null}
+        <div className="_feed_inner_timeline_total_reacts_txt" style={post.likes_count === 0 ? { marginLeft: 'auto' } : undefined}>
           <p className="_feed_inner_timeline_total_reacts_para1">
             <a href="#0" onClick={(e) => { e.preventDefault(); handleToggleComments(); }}><span>{post.comments_count}</span> Comment{post.comments_count !== 1 ? 's' : ''}</a>
           </p>

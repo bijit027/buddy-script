@@ -89,16 +89,14 @@ export default function Feed() {
   };
 
   // Handle like toggle (optimistically update post in cache)
-  const handleLikeToggle = (postId, { is_liked_by_me, likes_count }) => {
+  const handleLikeToggle = (postId, updates) => {
     queryClient.setQueryData(['feed'], (oldData) => {
       if (!oldData) return oldData;
       return {
         ...oldData,
         pages: oldData.pages.map((page) => ({
           ...page,
-          data: page.data.map((p) =>
-            p.id === postId ? { ...p, is_liked_by_me, likes_count } : p
-          ),
+          data: page.data.map((p) => (p.id === postId ? { ...p, ...updates } : p)),
         })),
       };
     });
