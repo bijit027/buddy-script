@@ -27,8 +27,9 @@ export default function Feed() {
       return res.data;
     },
     getNextPageParam: (lastPage) => {
-      if (lastPage.current_page < lastPage.last_page) {
-        return lastPage.current_page + 1;
+      const meta = lastPage.meta || lastPage;
+      if (meta.current_page < meta.last_page) {
+        return meta.current_page + 1;
       }
       return undefined;
     },
