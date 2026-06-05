@@ -162,30 +162,26 @@ export default function PostCard({ post, onDelete, onLikeToggle }) {
 
       <div className="_feed_inner_timeline_total_reacts _padd_r24 _padd_l24 _mar_b26" style={{ marginTop: 16 }}>
         <div className="_feed_inner_timeline_total_reacts_image" style={{ display: 'flex', alignItems: 'center' }}>
-          <img src="/assets/images/react_img1.png" alt="Like" className="_react_img1" style={{ zIndex: 10, position: 'relative' }} />
+          <img src="/assets/images/react_img1.png" alt="Like" className="_react_img1" style={{ position: 'relative', zIndex: 10 }} />
           {post.recent_likes && post.recent_likes.length > 0 ? (
-            <div style={{ display: 'flex', alignItems: 'center', marginLeft: 4 }}>
-              <div style={{ display: 'flex', marginRight: 8 }}>
-                {post.recent_likes.map((liker, idx) => (
-                  <img 
-                    key={liker.id} 
-                    src={liker.avatar} 
-                    alt={liker.name} 
-                    title={liker.name}
-                    style={{ 
-                      width: 20, height: 20, borderRadius: '50%', objectFit: 'cover', 
-                      marginLeft: idx === 0 ? 4 : -8, border: '2px solid #fff', position: 'relative', zIndex: 9 - idx
-                    }} 
-                  />
-                ))}
-              </div>
-              <p className="_feed_inner_timeline_total_reacts_para" style={{ fontSize: 13, color: '#65676b', margin: 0 }}>
+            <>
+              {post.recent_likes.map((liker, idx) => (
+                <img 
+                  key={liker.id} 
+                  src={liker.avatar} 
+                  alt={liker.name} 
+                  title={liker.name}
+                  className="_react_img"
+                  style={{ objectFit: 'cover', position: 'relative', zIndex: 9 - idx }} 
+                />
+              ))}
+              <span style={{ marginLeft: 8, fontSize: 14, color: '#65676b' }}>
                 Liked by <strong>{post.recent_likes[0].name}</strong> {post.likes_count > 1 ? `and ${post.likes_count - 1} others` : ''}
-              </p>
-            </div>
-          ) : (
-            <p className="_feed_inner_timeline_total_reacts_para" style={{ marginLeft: 6, margin: 0 }}>{post.likes_count}</p>
-          )}
+              </span>
+            </>
+          ) : post.likes_count > 0 ? (
+            <p className="_feed_inner_timeline_total_reacts_para" style={{ position: 'relative', zIndex: 9 }}>{post.likes_count}</p>
+          ) : null}
         </div>
         <div className="_feed_inner_timeline_total_reacts_txt">
           <p className="_feed_inner_timeline_total_reacts_para1">
