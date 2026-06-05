@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
@@ -77,6 +78,56 @@ class PostController extends Controller
         $post->load('user');
 
         return response()->json($this->formatPost($post, false), 201);
+    }
+
+    /**
+     * Update own post (content, visibility, image). Returns 403 if not the owner.
+     */
+    public function update(UpdatePostRequest $request, int $id): JsonResponse
+    {
+        $post = Post::findOrFail($id);
+
+        if ($post->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Forbidden. You can only edit your own posts.'], 403);
+        }
+
+        if ($request->has('content')) {
+            $post->content = strip_tags($request->content);
+        }
+
+        if ($request->has('is_public')) {
+            $post->is_public = $request->boolean('is_public');
+        }
+
+        if ($request->boolean('remove_image') && $post->image) {
+            Storage::disk('public')->delete($post->image);
+            $post->image = null;
+        }
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $mimeType = $file->getMimeType();
+
+            if (! in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif'])) {
+                return response()->json(['message' => 'Invalid image type.'], 422);
+            }
+
+            if ($post->image) {
+                Storage::disk('public')->delete($post->image);
+            }
+
+            $post->image = $file->store('posts', 'public');
+        }
+
+        $post->save();
+        $post->load(['user', 'likes.user']);
+
+        $isLiked = Like::where('user_id', Auth::id())
+            ->where('likeable_type', Post::class)
+            ->where('likeable_id', $post->id)
+            ->exists();
+
+        return response()->json($this->formatPost($post, $isLiked));
     }
 
     /**

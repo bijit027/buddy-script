@@ -66,6 +66,8 @@ export const postService = {
 
   getPostLikes: (id) => api.get(`/posts/${id}/likes`),
 
+  updatePost: (id, data) => api.put(`/posts/${id}`, data),
+
   deletePost: (id) => api.delete(`/posts/${id}`),
 
   getComments: (id) => api.get(`/posts/${id}/comments`),

@@ -75,6 +75,19 @@ export default function Feed() {
     });
   };
 
+  const handlePostUpdated = (updatedPost) => {
+    queryClient.setQueryData(['feed'], (oldData) => {
+      if (!oldData) return oldData;
+      return {
+        ...oldData,
+        pages: oldData.pages.map((page) => ({
+          ...page,
+          data: page.data.map((p) => (p.id === updatedPost.id ? { ...p, ...updatedPost } : p)),
+        })),
+      };
+    });
+  };
+
   // Handle like toggle (optimistically update post in cache)
   const handleLikeToggle = (postId, { is_liked_by_me, likes_count }) => {
     queryClient.setQueryData(['feed'], (oldData) => {
@@ -155,6 +168,7 @@ export default function Feed() {
                                 key={post.id}
                                 post={post}
                                 onDelete={handlePostDeleted}
+                                onUpdate={handlePostUpdated}
                                 onLikeToggle={handleLikeToggle}
                               />
                             ))

@@ -199,3 +199,163 @@ body.dark-mode ._profile_menu_logout:hover {
   background: #fee2e2;
   color: #b91c1c;
 }
+
+/* ─── Post owner actions menu ───────────────────────────────────────────── */
+._post_actions {
+  position: relative;
+  flex-shrink: 0;
+}
+
+._post_actions_trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+._post_actions_trigger:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+._post_actions_menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 168px;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px) scale(0.98);
+  transform-origin: top right;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  z-index: 20;
+}
+
+._post_actions_menu--open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+._post_actions_item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a2e;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s ease;
+}
+
+._post_actions_item:hover:not(:disabled) {
+  background: #f1f5f9;
+}
+
+._post_actions_item:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+._post_actions_item--danger {
+  color: #dc2626;
+}
+
+._post_actions_item--danger:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+._post_visibility_badge {
+  font-size: inherit;
+  color: #64748b;
+  font-weight: 500;
+}
+
+._post_visibility_badge--private {
+  color: #b45309;
+}
+
+._post_edit_form {
+  margin-top: 8px;
+}
+
+._post_edit_textarea {
+  width: 100%;
+  font-size: 15px;
+  line-height: 1.5;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  resize: vertical;
+  min-height: 80px;
+}
+
+._post_edit_textarea:focus {
+  border-color: #1877f2;
+  box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.15);
+  outline: none;
+}
+
+._post_edit_actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+._post_edit_btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+._post_edit_btn--ghost {
+  background: #e4e6eb;
+  color: #050505;
+}
+
+._post_edit_btn--ghost:hover:not(:disabled) {
+  background: #d8dadf;
+}
+
+._post_edit_btn--primary {
+  background: #1877f2;
+  color: #fff;
+}
+
+._post_edit_btn--primary:hover:not(:disabled) {
+  background: #166fe5;
+}
+
+._post_edit_btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+body.dark-mode ._post_actions_menu {
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+body.dark-mode ._post_actions_item {
+  color: #1a1a2e;
+}

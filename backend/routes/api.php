@@ -19,6 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Posts
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/posts', [PostController::class, 'store']);
+    Route::put('/posts/{id}', [PostController::class, 'update']);
     Route::delete('/posts/{id}', [PostController::class, 'destroy']);
     Route::post('/posts/{id}/like', [PostController::class, 'like']);
     Route::get('/posts/{id}/likes', [PostController::class, 'getLikes']);

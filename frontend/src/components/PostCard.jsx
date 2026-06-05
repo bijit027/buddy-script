@@ -1,11 +1,11 @@
 import { formatDistanceToNow } from 'date-fns';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { postService } from '../services/api';
 import CommentCard from './CommentCard';
 
-export default function PostCard({ post, onDelete, onLikeToggle }) {
+export default function PostCard({ post, onDelete, onUpdate, onLikeToggle }) {
   const { user } = useAuth();
   const [isLiking, setIsLiking] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -18,6 +18,25 @@ export default function PostCard({ post, onDelete, onLikeToggle }) {
   const [fullLikesList, setFullLikesList] = useState([]);
   const [isLoadingLikes, setIsLoadingLikes] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(post.content);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isTogglingVisibility, setIsTogglingVisibility] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    setEditContent(post.content);
+  }, [post.content]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const isOwner = user?.id === post.user.id;
   const timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true });
@@ -105,6 +124,7 @@ export default function PostCard({ post, onDelete, onLikeToggle }) {
   };
 
   const handleDelete = async () => {
+    setShowMenu(false);
     if (!window.confirm('Are you sure you want to delete this post?')) return;
     setIsDeleting(true);
     try {
@@ -114,6 +134,56 @@ export default function PostCard({ post, onDelete, onLikeToggle }) {
     } catch (err) {
       toast.error('Failed to delete post.');
       setIsDeleting(false);
+    }
+  };
+
+  const handleStartEdit = () => {
+    setShowMenu(false);
+    setEditContent(post.content);
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setEditContent(post.content);
+    setIsEditing(false);
+  };
+
+  const handleSaveEdit = async () => {
+    const trimmed = editContent.trim();
+    if (!trimmed) {
+      toast.error('Post content cannot be empty.');
+      return;
+    }
+    if (trimmed === post.content) {
+      setIsEditing(false);
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const res = await postService.updatePost(post.id, { content: trimmed });
+      onUpdate?.(res.data);
+      setIsEditing(false);
+      toast.success('Post updated.');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to update post.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleToggleVisibility = async () => {
+    setShowMenu(false);
+    setIsTogglingVisibility(true);
+    const nextPublic = !post.is_public;
+    try {
+      const res = await postService.updatePost(post.id, { is_public: nextPublic });
+      onUpdate?.(res.data);
+      toast.success(nextPublic ? 'Post is now public.' : 'Post is now private.');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to update visibility.');
+    } finally {
+      setIsTogglingVisibility(false);
     }
   };
 
@@ -128,48 +198,90 @@ export default function PostCard({ post, onDelete, onLikeToggle }) {
             <div className="_feed_inner_timeline_post_box_txt">
               <h4 className="_feed_inner_timeline_post_box_title">{post.user.name}</h4>
               <p className="_feed_inner_timeline_post_box_para">
-                {timeAgo} . <a href="#0">{post.is_public ? 'Public' : 'Private'}</a>
+                {timeAgo}
+                {isOwner && (
+                  <>
+                    {' · '}
+                    <span className={`_post_visibility_badge${post.is_public ? '' : ' _post_visibility_badge--private'}`}>
+                      {post.is_public ? 'Public' : 'Private'}
+                    </span>
+                  </>
+                )}
               </p>
             </div>
           </div>
           
           {isOwner && (
-            <div className="_feed_inner_timeline_post_box_dropdown" style={{ position: 'relative' }}>
-              <div className="_feed_timeline_post_dropdown">
-                <button 
-                  type="button" 
-                  className="_feed_timeline_post_dropdown_link" 
-                  onClick={() => setShowMenu(!showMenu)}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="4" height="17" fill="none" viewBox="0 0 4 17">
-                    <circle cx="2" cy="2" r="2" fill="#C4C4C4" />
-                    <circle cx="2" cy="8" r="2" fill="#C4C4C4" />
-                    <circle cx="2" cy="15" r="2" fill="#C4C4C4" />
+            <div className="_post_actions" ref={menuRef}>
+              <button
+                type="button"
+                className="_post_actions_trigger"
+                onClick={() => setShowMenu((prev) => !prev)}
+                aria-expanded={showMenu}
+                aria-label="Post options"
+                disabled={isDeleting || isTogglingVisibility}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="4" height="17" fill="none" viewBox="0 0 4 17">
+                  <circle cx="2" cy="2" r="2" fill="#C4C4C4" />
+                  <circle cx="2" cy="8" r="2" fill="#C4C4C4" />
+                  <circle cx="2" cy="15" r="2" fill="#C4C4C4" />
+                </svg>
+              </button>
+
+              <div className={`_post_actions_menu${showMenu ? ' _post_actions_menu--open' : ''}`}>
+                <button type="button" className="_post_actions_item" onClick={handleStartEdit}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 18 18" aria-hidden="true">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12.75 2.25l3 3L6.75 14.25 3 15l.75-3.75L12.75 2.25z" />
                   </svg>
+                  Edit post
+                </button>
+                <button
+                  type="button"
+                  className="_post_actions_item"
+                  onClick={handleToggleVisibility}
+                  disabled={isTogglingVisibility}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 18 18" aria-hidden="true">
+                    {post.is_public ? (
+                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M13.5 8.25a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM2.25 15.75s2.25-3.75 6.75-3.75 6.75 3.75 6.75 3.75" />
+                    ) : (
+                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5.25 7.5V5.25a3.75 3.75 0 117.5 0V7.5M3.75 7.5h10.5v7.5H3.75V7.5z" />
+                    )}
+                  </svg>
+                  {post.is_public ? 'Make private' : 'Make public'}
+                </button>
+                <button type="button" className="_post_actions_item _post_actions_item--danger" onClick={handleDelete}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 18 18" aria-hidden="true">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M2.25 4.5h13.5M6 4.5V3a1.5 1.5 011.5-1.5h3A1.5 1.5 0112 3v1.5m2.25 0V15a1.5 1.5 01-1.5 1.5h-7.5a1.5 1.5 01-1.5-1.5V4.5h10.5z" />
+                  </svg>
+                  Delete post
                 </button>
               </div>
-              
-              {showMenu && (
-                <div className="_feed_timeline_dropdown _timeline_dropdown" style={{ display: 'block', position: 'absolute', right: 0, top: '100%', zIndex: 10 }}>
-                  <ul className="_feed_timeline_dropdown_list">
-                    <li className="_feed_timeline_dropdown_item">
-                      <a href="#0" onClick={(e) => { e.preventDefault(); handleDelete(); }} className="_feed_timeline_dropdown_link">
-                        <span>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
-                            <path stroke="#1890FF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.2" d="M2.25 4.5h13.5M6 4.5V3a1.5 1.5 0 011.5-1.5h3A1.5 1.5 0 0112 3v1.5m2.25 0V15a1.5 1.5 0 01-1.5 1.5h-7.5a1.5 1.5 0 01-1.5-1.5V4.5h10.5zM7.5 8.25v4.5M10.5 8.25v4.5"/>
-                          </svg>										
-                        </span>
-                        Delete Post	
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              )}
             </div>
           )}
         </div>
         
-        <h4 className="_feed_inner_timeline_post_title" style={{ fontWeight: 'normal', fontSize: 16 }}>{post.content}</h4>
+        {isEditing ? (
+          <div className="_post_edit_form">
+            <textarea
+              className="form-control _post_edit_textarea"
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+              disabled={isSaving}
+              rows={3}
+            />
+            <div className="_post_edit_actions">
+              <button type="button" className="_post_edit_btn _post_edit_btn--ghost" onClick={handleCancelEdit} disabled={isSaving}>
+                Cancel
+              </button>
+              <button type="button" className="_post_edit_btn _post_edit_btn--primary" onClick={handleSaveEdit} disabled={isSaving || !editContent.trim()}>
+                {isSaving ? 'Saving…' : 'Save'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <h4 className="_feed_inner_timeline_post_title" style={{ fontWeight: 'normal', fontSize: 16 }}>{post.content}</h4>
+        )}
         
         {post.image && (
           <div className="_feed_inner_timeline_image" style={{ marginTop: 16 }}>
