@@ -181,7 +181,7 @@ class PostController extends Controller
 
         $userId = Auth::id();
 
-        $comments = Comment::with(['user', 'replies.user'])
+        $comments = Comment::with(['user', 'replies.user', 'likes.user', 'replies.likes.user'])
             ->where('post_id', $id)
             ->whereNull('parent_id')
             ->latest()
@@ -198,13 +198,36 @@ class PostController extends Controller
             ->toArray();
 
         $formatted = $comments->map(function (Comment $comment) use ($likedCommentIds) {
+            $recentCommentLikes = [];
+            if ($comment->relationLoaded('likes')) {
+                $recentCommentLikes = $comment->likes->sortByDesc('created_at')->take(3)->map(function ($like) {
+                    return [
+                        'id'     => $like->user->id,
+                        'name'   => $like->user->name,
+                        'avatar' => $like->user->avatar_url,
+                    ];
+                })->values()->toArray();
+            }
+
             $formattedReplies = $comment->replies->sortBy('created_at')->map(function ($reply) use ($likedCommentIds) {
+                $recentReplyLikes = [];
+                if ($reply->relationLoaded('likes')) {
+                    $recentReplyLikes = $reply->likes->sortByDesc('created_at')->take(3)->map(function ($like) {
+                        return [
+                            'id'     => $like->user->id,
+                            'name'   => $like->user->name,
+                            'avatar' => $like->user->avatar_url,
+                        ];
+                    })->values()->toArray();
+                }
+
                 return [
                     'id'             => $reply->id,
                     'content'        => $reply->content,
                     'created_at'     => $reply->created_at,
                     'likes_count'    => $reply->likes_count,
                     'is_liked_by_me' => in_array($reply->id, $likedCommentIds),
+                    'recent_likes'   => $recentReplyLikes,
                     'user'           => [
                         'id'     => $reply->user->id,
                         'name'   => $reply->user->name,
@@ -219,6 +242,7 @@ class PostController extends Controller
                 'created_at'     => $comment->created_at,
                 'likes_count'    => $comment->likes_count,
                 'is_liked_by_me' => in_array($comment->id, $likedCommentIds),
+                'recent_likes'   => $recentCommentLikes,
                 'replies'        => $formattedReplies,
                 'user'           => [
                     'id'     => $comment->user->id,

@@ -76,7 +76,7 @@ export default function CommentCard({ comment, onCommentUpdate }) {
         </div>
 
         {/* Comment Actions */}
-        <div className="_comment_actions" style={{ display: 'flex', gap: 16, fontSize: 13, color: '#65676b', marginBottom: 12, paddingLeft: 8 }}>
+        <div className="_comment_actions" style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#65676b', marginBottom: 12, paddingLeft: 8 }}>
           <button 
             onClick={handleLike}
             disabled={isLiking}
@@ -89,7 +89,7 @@ export default function CommentCard({ comment, onCommentUpdate }) {
               cursor: 'pointer'
             }}
           >
-            Like {comment.likes_count > 0 && `(${comment.likes_count})`}
+            Like
           </button>
           
           <button 
@@ -100,6 +100,28 @@ export default function CommentCard({ comment, onCommentUpdate }) {
           </button>
           
           <span>{new Date(comment.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+
+          {comment.recent_likes && comment.recent_likes.length > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', paddingRight: 16 }}>
+              <div style={{ display: 'flex' }}>
+                {comment.recent_likes.map((liker, idx) => (
+                  <img 
+                    key={liker.id} 
+                    src={liker.avatar} 
+                    title={liker.name}
+                    alt={liker.name}
+                    style={{ 
+                      width: 16, height: 16, borderRadius: '50%', objectFit: 'cover', 
+                      marginLeft: idx === 0 ? 0 : -6, border: '1px solid #fff', position: 'relative', zIndex: 9 - idx
+                    }} 
+                  />
+                ))}
+              </div>
+              <span style={{ marginLeft: 4, fontSize: 12 }}>
+                {comment.likes_count}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Reply Form */}
@@ -146,7 +168,7 @@ export default function CommentCard({ comment, onCommentUpdate }) {
                   </div>
                   
                   {/* Reply Actions (Like only) */}
-                  <div className="_comment_actions" style={{ display: 'flex', gap: 16, fontSize: 12, color: '#65676b', paddingLeft: 8 }}>
+                  <div className="_comment_actions" style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: '#65676b', paddingLeft: 8 }}>
                     <button 
                       onClick={async () => {
                         const prevLiked = reply.is_liked_by_me;
@@ -180,9 +202,31 @@ export default function CommentCard({ comment, onCommentUpdate }) {
                         cursor: 'pointer' 
                       }}
                     >
-                      Like {reply.likes_count > 0 && `(${reply.likes_count})`}
+                      Like
                     </button>
                     <span>{new Date(reply.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+
+                    {reply.recent_likes && reply.recent_likes.length > 0 && (
+                      <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', paddingRight: 16 }}>
+                        <div style={{ display: 'flex' }}>
+                          {reply.recent_likes.map((liker, idx) => (
+                            <img 
+                              key={liker.id} 
+                              src={liker.avatar} 
+                              title={liker.name}
+                              alt={liker.name}
+                              style={{ 
+                                width: 14, height: 14, borderRadius: '50%', objectFit: 'cover', 
+                                marginLeft: idx === 0 ? 0 : -6, border: '1px solid #fff', position: 'relative', zIndex: 9 - idx
+                              }} 
+                            />
+                          ))}
+                        </div>
+                        <span style={{ marginLeft: 4, fontSize: 11 }}>
+                          {reply.likes_count}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
