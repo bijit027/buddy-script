@@ -31,3 +31,34 @@ body.dark-mode ._spinner {
   border-color: #3a3b3c;
   border-top-color: #1877f2;
 }
+
+/* ─── Profile dropdown toggle ───────────────────────────────────────────── */
+._header_nav_profile_toggle {
+  display: flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+._header_nav_profile_toggle:hover ._header_nav_para {
+  color: var(--color5) !important;
+}
+
+._nav_profile_dropdown.show {
+  z-index: 1050;
+}
+
+._nav_dropdown_logout_btn {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+._nav_dropdown_list_item_last {
+  margin-bottom: 0;
+}
