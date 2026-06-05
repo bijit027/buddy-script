@@ -82,7 +82,13 @@ export function AuthProvider({ children }) {
 
   const register = async (firstName, lastName, email, password, passwordConfirmation) => {
     const res = await authService.register(firstName, lastName, email, password, passwordConfirmation);
-    return res.data;
+    const { token, user } = res.data;
+
+    localStorage.setItem('bs_token', token);
+    localStorage.setItem('bs_user', JSON.stringify(user));
+
+    dispatch({ type: 'LOGIN', payload: { token, user } });
+    return user;
   };
 
   const logout = async () => {

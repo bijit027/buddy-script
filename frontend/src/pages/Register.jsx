@@ -42,8 +42,8 @@ export default function Register() {
     setIsLoading(true);
     try {
       await register(firstName, lastName, email, password, confirmPassword);
-      toast.success('Account created! Please log in.');
-      navigate('/login');
+      toast.success('Welcome to BuddyScript!');
+      navigate('/feed');
     } catch (err) {
       const data = err.response?.data;
       if (data?.errors) {
