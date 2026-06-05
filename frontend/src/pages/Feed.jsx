@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import CreatePostCard from '../components/CreatePostCard';
@@ -13,6 +13,7 @@ import { useDarkMode } from '../hooks/useDarkMode';
 export default function Feed() {
   const { ref, inView } = useInView();
   const { isDark, toggleDarkMode } = useDarkMode();
+  const queryClient = useQueryClient();
 
   const {
     data,
@@ -20,7 +21,6 @@ export default function Feed() {
     hasNextPage,
     isFetchingNextPage,
     status,
-    setQueryData, // To manually update cache
   } = useInfiniteQuery({
     queryKey: ['feed'],
     queryFn: async ({ pageParam = 1 }) => {
@@ -44,7 +44,7 @@ export default function Feed() {
 
   // Handle post creation (optimistically add to top of feed)
   const handlePostCreated = (newPost) => {
-    setQueryData(['feed'], (oldData) => {
+    queryClient.setQueryData(['feed'], (oldData) => {
       if (!oldData) return oldData;
       return {
         ...oldData,
@@ -63,7 +63,7 @@ export default function Feed() {
 
   // Handle post deletion (remove from cache)
   const handlePostDeleted = (postId) => {
-    setQueryData(['feed'], (oldData) => {
+    queryClient.setQueryData(['feed'], (oldData) => {
       if (!oldData) return oldData;
       return {
         ...oldData,
@@ -77,7 +77,7 @@ export default function Feed() {
 
   // Handle like toggle (optimistically update post in cache)
   const handleLikeToggle = (postId, { is_liked_by_me, likes_count }) => {
-    setQueryData(['feed'], (oldData) => {
+    queryClient.setQueryData(['feed'], (oldData) => {
       if (!oldData) return oldData;
       return {
         ...oldData,

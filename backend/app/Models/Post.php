@@ -13,6 +13,7 @@ class Post extends Model
         'user_id',
         'content',
         'image',
+        'is_public',
         'likes_count',
         'comments_count',
     ];
