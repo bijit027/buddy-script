@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\UserResource;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
@@ -17,7 +20,7 @@ class PostController extends Controller
      * Paginated feed — 15 posts per page, latest first.
      * Eager loads user. Adds is_liked_by_me flag per post.
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request)
     {
         $userId = Auth::id();
 
@@ -37,10 +40,11 @@ class PostController extends Controller
             ->toArray();
 
         $posts->getCollection()->transform(function (Post $post) use ($likedPostIds) {
-            return $this->formatPost($post, in_array($post->id, $likedPostIds));
+            $post->is_liked_by_me = in_array($post->id, $likedPostIds);
+            return $post;
         });
 
-        return response()->json($posts);
+        return PostResource::collection($posts);
     }
 
     /**
@@ -77,7 +81,8 @@ class PostController extends Controller
 
         $post->load('user');
 
-        return response()->json($this->formatPost($post, false), 201);
+        $post->is_liked_by_me = false;
+        return response()->json(new PostResource($post), 201);
     }
 
     /**
@@ -125,7 +130,8 @@ class PostController extends Controller
             ->where('likeable_id', $post->id)
             ->exists();
 
-        return response()->json($this->formatPost($post, $isLiked));
+        $post->is_liked_by_me = $isLiked;
+        return response()->json(new PostResource($post));
     }
 
     /**
@@ -190,21 +196,15 @@ class PostController extends Controller
     /**
      * Get all users who liked a post.
      */
-    public function getLikes(int $id): JsonResponse
+    public function getLikes(int $id)
     {
         $post = Post::findOrFail($id);
 
         $this->authorize('view', $post);
 
-        $likes = $post->likes()->with('user')->latest()->get()->map(function ($l) {
-            return [
-                'id' => $l->user->id,
-                'name' => $l->user->full_name,
-                'avatar' => $l->user->avatar_url,
-            ];
-        });
+        $likes = $post->likes()->with('user')->latest()->get()->pluck('user');
 
-        return response()->json($likes);
+        return UserResource::collection($likes);
     }
 
     /**
@@ -229,25 +229,14 @@ class PostController extends Controller
         $post->increment('comments_count');
         $comment->load('user');
 
-        return response()->json([
-            'id' => $comment->id,
-            'content' => $comment->content,
-            'created_at' => $comment->created_at,
-            'likes_count' => 0,
-            'is_liked_by_me' => false,
-            'replies' => [],
-            'user' => [
-                'id' => $comment->user->id,
-                'name' => $comment->user->name,
-                'avatar' => $comment->user->avatar_url,
-            ],
-        ], 201);
+        $comment->is_liked_by_me = false;
+        return response()->json(new CommentResource($comment), 201);
     }
 
     /**
      * Get all comments for a post with user info.
      */
-    public function getComments(int $id): JsonResponse
+    public function getComments(int $id)
     {
         $post = Post::findOrFail($id);
 
@@ -271,96 +260,13 @@ class PostController extends Controller
             ->pluck('likeable_id')
             ->toArray();
 
-        $formatted = $comments->map(function (Comment $comment) use ($likedCommentIds) {
-            $recentCommentLikes = [];
-            if ($comment->relationLoaded('likes')) {
-                $recentCommentLikes = $comment->likes->sortByDesc('created_at')->take(3)->map(function ($like) {
-                    return [
-                        'id' => $like->user->id,
-                        'name' => $like->user->name,
-                        'avatar' => $like->user->avatar_url,
-                    ];
-                })->values()->toArray();
-            }
-
-            $formattedReplies = $comment->replies->sortBy('created_at')->map(function ($reply) use ($likedCommentIds) {
-                $recentReplyLikes = [];
-                if ($reply->relationLoaded('likes')) {
-                    $recentReplyLikes = $reply->likes->sortByDesc('created_at')->take(3)->map(function ($like) {
-                        return [
-                            'id' => $like->user->id,
-                            'name' => $like->user->name,
-                            'avatar' => $like->user->avatar_url,
-                        ];
-                    })->values()->toArray();
-                }
-
-                return [
-                    'id' => $reply->id,
-                    'content' => $reply->content,
-                    'created_at' => $reply->created_at,
-                    'likes_count' => $reply->likes_count,
-                    'is_liked_by_me' => in_array($reply->id, $likedCommentIds),
-                    'recent_likes' => $recentReplyLikes,
-                    'user' => [
-                        'id' => $reply->user->id,
-                        'name' => $reply->user->name,
-                        'avatar' => $reply->user->avatar_url,
-                    ],
-                ];
-            })->values();
-
-            return [
-                'id' => $comment->id,
-                'content' => $comment->content,
-                'created_at' => $comment->created_at,
-                'likes_count' => $comment->likes_count,
-                'is_liked_by_me' => in_array($comment->id, $likedCommentIds),
-                'recent_likes' => $recentCommentLikes,
-                'replies' => $formattedReplies,
-                'user' => [
-                    'id' => $comment->user->id,
-                    'name' => $comment->user->name,
-                    'avatar' => $comment->user->avatar_url,
-                ],
-            ];
+        $comments->each(function ($comment) use ($likedCommentIds) {
+            $comment->is_liked_by_me = in_array($comment->id, $likedCommentIds);
+            $comment->replies->each(function ($reply) use ($likedCommentIds) {
+                $reply->is_liked_by_me = in_array($reply->id, $likedCommentIds);
+            });
         });
 
-        return response()->json($formatted);
-    }
-
-
-    /**
-     * Consistent post format for all responses.
-     */
-    private function formatPost(Post $post, bool $isLikedByMe): array
-    {
-        $recentLikes = [];
-        if ($post->relationLoaded('likes')) {
-            $recentLikes = $post->likes->sortByDesc('created_at')->take(3)->map(function ($like) {
-                return [
-                    'id' => $like->user->id,
-                    'name' => $like->user->name,
-                    'avatar' => $like->user->avatar_url,
-                ];
-            })->values()->toArray();
-        }
-
-        return [
-            'id' => $post->id,
-            'content' => $post->content,
-            'image' => $post->image_url,
-            'likes_count' => $post->likes_count,
-            'comments_count' => $post->comments_count,
-            'is_liked_by_me' => $isLikedByMe,
-            'is_public' => (bool) $post->is_public,
-            'recent_likes' => $recentLikes,
-            'created_at' => $post->created_at,
-            'user' => [
-                'id' => $post->user->id,
-                'name' => $post->user->name,
-                'avatar' => $post->user->avatar_url,
-            ],
-        ];
+        return CommentResource::collection($comments);
     }
 }
