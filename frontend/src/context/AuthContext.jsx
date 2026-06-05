@@ -80,8 +80,8 @@ export function AuthProvider({ children }) {
     return user;
   };
 
-  const register = async (name, email, password, passwordConfirmation) => {
-    const res = await authService.register(name, email, password, passwordConfirmation);
+  const register = async (firstName, lastName, email, password, passwordConfirmation) => {
+    const res = await authService.register(firstName, lastName, email, password, passwordConfirmation);
     return res.data;
   };
 

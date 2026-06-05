@@ -12,6 +12,8 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
+        'first_name',
+        'last_name',
         'name',
         'email',
         'password',
@@ -64,13 +66,22 @@ class User extends Authenticatable
         return $this->hasMany(FriendRequest::class, 'receiver_id');
     }
 
+    // Helper: full name from first + last, fallback to name
+    public function getFullNameAttribute(): string
+    {
+        if ($this->first_name) {
+            return trim($this->first_name . ' ' . $this->last_name);
+        }
+        return $this->name ?? 'User';
+    }
+
     // Helper: avatar URL with fallback
     public function getAvatarUrlAttribute(): string
     {
         if ($this->avatar) {
             return asset('storage/' . $this->avatar);
         }
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=4f46e5&color=fff';
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->full_name) . '&background=4f46e5&color=fff';
     }
 
     // Helper: cover photo URL

@@ -20,7 +20,7 @@ class PostController extends Controller
     {
         $userId = Auth::id();
 
-        $posts = Post::with('user')
+        $posts = Post::with(['user', 'likes.user'])
             ->where(function ($query) use ($userId) {
                 $query->where('is_public', true)
                       ->orWhere('user_id', $userId);
@@ -236,6 +236,17 @@ class PostController extends Controller
      */
     private function formatPost(Post $post, bool $isLikedByMe): array
     {
+        $recentLikes = [];
+        if ($post->relationLoaded('likes')) {
+            $recentLikes = $post->likes->sortByDesc('created_at')->take(3)->map(function ($like) {
+                return [
+                    'id'     => $like->user->id,
+                    'name'   => $like->user->name,
+                    'avatar' => $like->user->avatar_url,
+                ];
+            })->values()->toArray();
+        }
+
         return [
             'id'              => $post->id,
             'content'         => $post->content,
@@ -244,6 +255,7 @@ class PostController extends Controller
             'comments_count'  => $post->comments_count,
             'is_liked_by_me'  => $isLikedByMe,
             'is_public'       => (bool)$post->is_public,
+            'recent_likes'    => $recentLikes,
             'created_at'      => $post->created_at,
             'user'            => [
                 'id'     => $post->user->id,

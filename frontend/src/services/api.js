@@ -37,9 +37,10 @@ api.interceptors.response.use(
 
 // ─── Auth Service ─────────────────────────────────────────────────────────────
 export const authService = {
-  register: (name, email, password, passwordConfirmation) =>
+  register: (firstName, lastName, email, password, passwordConfirmation) =>
     api.post('/register', {
-      name,
+      first_name: firstName,
+      last_name: lastName,
       email,
       password,
       password_confirmation: passwordConfirmation,

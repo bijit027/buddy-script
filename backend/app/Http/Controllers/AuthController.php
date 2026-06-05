@@ -18,9 +18,11 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
+            'first_name' => $request->first_name,
+            'last_name'  => $request->last_name,
+            'name'       => $request->first_name . ' ' . $request->last_name,
+            'email'      => $request->email,
+            'password'   => Hash::make($request->password),
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -79,13 +81,15 @@ class AuthController extends Controller
     private function formatUser(User $user): array
     {
         return [
-            'id'              => $user->id,
-            'name'            => $user->name,
-            'email'           => $user->email,
-            'avatar'          => $user->avatar_url,
-            'bio'             => $user->bio,
-            'cover_photo'     => $user->cover_photo_url,
-            'created_at'      => $user->created_at,
+            'id'          => $user->id,
+            'first_name'  => $user->first_name,
+            'last_name'   => $user->last_name,
+            'name'        => $user->full_name,
+            'email'       => $user->email,
+            'avatar'      => $user->avatar_url,
+            'bio'         => $user->bio,
+            'cover_photo' => $user->cover_photo_url,
+            'created_at'  => $user->created_at,
         ];
     }
 }

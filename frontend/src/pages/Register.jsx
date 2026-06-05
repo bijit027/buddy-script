@@ -7,7 +7,8 @@ export default function Register() {
   const navigate = useNavigate();
   const { register } = useAuth();
 
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -18,7 +19,8 @@ export default function Register() {
   // ─── Validation ─────────────────────────────────────────────────────────────
   const validate = () => {
     const newErrors = {};
-    if (!name.trim()) newErrors.name = 'Full name is required.';
+    if (!firstName.trim()) newErrors.first_name = 'First name is required.';
+    if (!lastName.trim()) newErrors.last_name = 'Last name is required.';
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       newErrors.email = 'Please enter a valid email address.';
     if (!password || password.length < 8)
@@ -39,7 +41,7 @@ export default function Register() {
 
     setIsLoading(true);
     try {
-      await register(name, email, password, confirmPassword);
+      await register(firstName, lastName, email, password, confirmPassword);
       toast.success('Account created! Please log in.');
       navigate('/login');
     } catch (err) {
@@ -124,20 +126,37 @@ export default function Register() {
 
                 <form className="_social_registration_form" onSubmit={handleSubmit}>
                   <div className="row">
-                    {/* Name */}
-                    <div className="col-xl-12">
+                    {/* First Name */}
+                    <div className="col-xl-6">
                       <div className="_social_registration_form_input _mar_b14">
-                        <label className="_social_registration_label _mar_b8" htmlFor="reg_name">Full Name</label>
+                        <label className="_social_registration_label _mar_b8" htmlFor="reg_first_name">First Name</label>
                         <input
-                          id="reg_name"
+                          id="reg_first_name"
                           type="text"
                           className="form-control _social_registration_input"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          placeholder="Enter your full name"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          placeholder="First name"
                           disabled={isLoading}
                         />
-                        <FieldError field="name" />
+                        <FieldError field="first_name" />
+                      </div>
+                    </div>
+
+                    {/* Last Name */}
+                    <div className="col-xl-6">
+                      <div className="_social_registration_form_input _mar_b14">
+                        <label className="_social_registration_label _mar_b8" htmlFor="reg_last_name">Last Name</label>
+                        <input
+                          id="reg_last_name"
+                          type="text"
+                          className="form-control _social_registration_input"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                          placeholder="Last name"
+                          disabled={isLoading}
+                        />
+                        <FieldError field="last_name" />
                       </div>
                     </div>
 
