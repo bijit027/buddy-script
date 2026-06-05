@@ -17,8 +17,7 @@
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.6.0",
     "react-intersection-observer": "^10.0.3",
-    "react-router-dom": "^7.17.0",
-    "zustand": "^5.0.14"
+    "react-router-dom": "^7.17.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
