@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->morphs('likeable');
             $table->timestamps();
-            
+
             $table->unique(['user_id', 'likeable_id', 'likeable_type']);
         });
     }

@@ -16,9 +16,9 @@ class ProfileController extends Controller
         $user = $request->user();
 
         $request->validate([
-            'name'        => ['sometimes', 'string', 'max:255'],
-            'bio'         => ['sometimes', 'nullable', 'string', 'max:500'],
-            'avatar'      => ['sometimes', 'nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'name' => ['sometimes', 'string', 'max:255'],
+            'bio' => ['sometimes', 'nullable', 'string', 'max:500'],
+            'avatar' => ['sometimes', 'nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'],
             'cover_photo' => ['sometimes', 'nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
         ]);
 
@@ -51,12 +51,12 @@ class ProfileController extends Controller
 
         return response()->json([
             'message' => 'Profile updated successfully.',
-            'user'    => [
-                'id'          => $user->id,
-                'name'        => $user->name,
-                'email'       => $user->email,
-                'avatar'      => $user->avatar_url,
-                'bio'         => $user->bio,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar' => $user->avatar_url,
+                'bio' => $user->bio,
                 'cover_photo' => $user->cover_photo_url,
             ],
         ]);

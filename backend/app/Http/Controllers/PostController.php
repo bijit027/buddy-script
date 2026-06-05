@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
-use App\Models\Post;
 use App\Models\Like;
+use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +23,7 @@ class PostController extends Controller
         $posts = Post::with(['user', 'likes.user'])
             ->where(function ($query) use ($userId) {
                 $query->where('is_public', true)
-                      ->orWhere('user_id', $userId);
+                    ->orWhere('user_id', $userId);
             })
             ->latest()
             ->paginate(15);
@@ -48,8 +48,8 @@ class PostController extends Controller
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'content'   => ['required', 'string', 'max:5000'],
-            'image'     => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif', 'max:5120'],
+            'content' => ['required', 'string', 'max:5000'],
+            'image' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif', 'max:5120'],
             'is_public' => ['required', 'boolean'],
         ]);
 
@@ -60,7 +60,7 @@ class PostController extends Controller
 
             // Validate MIME by reading file header (not just extension)
             $mimeType = $file->getMimeType();
-            if (!in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif'])) {
+            if (! in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif'])) {
                 return response()->json(['message' => 'Invalid image type.'], 422);
             }
 
@@ -68,9 +68,9 @@ class PostController extends Controller
         }
 
         $post = Post::create([
-            'user_id'   => Auth::id(),
-            'content'   => strip_tags($request->content),
-            'image'     => $imagePath,
+            'user_id' => Auth::id(),
+            'content' => strip_tags($request->content),
+            'image' => $imagePath,
             'is_public' => $request->boolean('is_public'),
         ]);
 
@@ -105,7 +105,7 @@ class PostController extends Controller
      */
     public function like(int $id): JsonResponse
     {
-        $post   = Post::findOrFail($id);
+        $post = Post::findOrFail($id);
         $userId = Auth::id();
 
         $existingLike = Like::where('user_id', $userId)
@@ -132,7 +132,7 @@ class PostController extends Controller
         $post->refresh();
 
         return response()->json([
-            'likes_count'   => $post->likes_count,
+            'likes_count' => $post->likes_count,
             'is_liked_by_me' => $isLiked,
         ]);
     }
@@ -143,8 +143,8 @@ class PostController extends Controller
     public function getLikes(int $id): JsonResponse
     {
         $post = Post::findOrFail($id);
-        
-        $likes = $post->likes()->with('user')->latest()->get()->map(function($l) {
+
+        $likes = $post->likes()->with('user')->latest()->get()->map(function ($l) {
             return [
                 'id' => $l->user->id,
                 'name' => $l->user->full_name,
@@ -154,7 +154,6 @@ class PostController extends Controller
 
         return response()->json($likes);
     }
-
 
     /**
      * Add a comment to a post.
@@ -177,15 +176,15 @@ class PostController extends Controller
         $comment->load('user');
 
         return response()->json([
-            'id'             => $comment->id,
-            'content'        => $comment->content,
-            'created_at'     => $comment->created_at,
-            'likes_count'    => 0,
+            'id' => $comment->id,
+            'content' => $comment->content,
+            'created_at' => $comment->created_at,
+            'likes_count' => 0,
             'is_liked_by_me' => false,
-            'replies'        => [],
-            'user'           => [
-                'id'     => $comment->user->id,
-                'name'   => $comment->user->name,
+            'replies' => [],
+            'user' => [
+                'id' => $comment->user->id,
+                'name' => $comment->user->name,
                 'avatar' => $comment->user->avatar_url,
             ],
         ], 201);
@@ -207,7 +206,7 @@ class PostController extends Controller
             ->get();
 
         $allCommentIds = $comments->pluck('id')->merge(
-            $comments->flatMap(fn($c) => $c->replies->pluck('id'))
+            $comments->flatMap(fn ($c) => $c->replies->pluck('id'))
         )->unique()->toArray();
 
         $likedCommentIds = Like::where('user_id', $userId)
@@ -221,8 +220,8 @@ class PostController extends Controller
             if ($comment->relationLoaded('likes')) {
                 $recentCommentLikes = $comment->likes->sortByDesc('created_at')->take(3)->map(function ($like) {
                     return [
-                        'id'     => $like->user->id,
-                        'name'   => $like->user->name,
+                        'id' => $like->user->id,
+                        'name' => $like->user->name,
                         'avatar' => $like->user->avatar_url,
                     ];
                 })->values()->toArray();
@@ -233,39 +232,39 @@ class PostController extends Controller
                 if ($reply->relationLoaded('likes')) {
                     $recentReplyLikes = $reply->likes->sortByDesc('created_at')->take(3)->map(function ($like) {
                         return [
-                            'id'     => $like->user->id,
-                            'name'   => $like->user->name,
+                            'id' => $like->user->id,
+                            'name' => $like->user->name,
                             'avatar' => $like->user->avatar_url,
                         ];
                     })->values()->toArray();
                 }
 
                 return [
-                    'id'             => $reply->id,
-                    'content'        => $reply->content,
-                    'created_at'     => $reply->created_at,
-                    'likes_count'    => $reply->likes_count,
+                    'id' => $reply->id,
+                    'content' => $reply->content,
+                    'created_at' => $reply->created_at,
+                    'likes_count' => $reply->likes_count,
                     'is_liked_by_me' => in_array($reply->id, $likedCommentIds),
-                    'recent_likes'   => $recentReplyLikes,
-                    'user'           => [
-                        'id'     => $reply->user->id,
-                        'name'   => $reply->user->name,
+                    'recent_likes' => $recentReplyLikes,
+                    'user' => [
+                        'id' => $reply->user->id,
+                        'name' => $reply->user->name,
                         'avatar' => $reply->user->avatar_url,
                     ],
                 ];
             })->values();
 
             return [
-                'id'             => $comment->id,
-                'content'        => $comment->content,
-                'created_at'     => $comment->created_at,
-                'likes_count'    => $comment->likes_count,
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'created_at' => $comment->created_at,
+                'likes_count' => $comment->likes_count,
                 'is_liked_by_me' => in_array($comment->id, $likedCommentIds),
-                'recent_likes'   => $recentCommentLikes,
-                'replies'        => $formattedReplies,
-                'user'           => [
-                    'id'     => $comment->user->id,
-                    'name'   => $comment->user->name,
+                'recent_likes' => $recentCommentLikes,
+                'replies' => $formattedReplies,
+                'user' => [
+                    'id' => $comment->user->id,
+                    'name' => $comment->user->name,
                     'avatar' => $comment->user->avatar_url,
                 ],
             ];
@@ -283,26 +282,26 @@ class PostController extends Controller
         if ($post->relationLoaded('likes')) {
             $recentLikes = $post->likes->sortByDesc('created_at')->take(3)->map(function ($like) {
                 return [
-                    'id'     => $like->user->id,
-                    'name'   => $like->user->name,
+                    'id' => $like->user->id,
+                    'name' => $like->user->name,
                     'avatar' => $like->user->avatar_url,
                 ];
             })->values()->toArray();
         }
 
         return [
-            'id'              => $post->id,
-            'content'         => $post->content,
-            'image'           => $post->image_url,
-            'likes_count'     => $post->likes_count,
-            'comments_count'  => $post->comments_count,
-            'is_liked_by_me'  => $isLikedByMe,
-            'is_public'       => (bool)$post->is_public,
-            'recent_likes'    => $recentLikes,
-            'created_at'      => $post->created_at,
-            'user'            => [
-                'id'     => $post->user->id,
-                'name'   => $post->user->name,
+            'id' => $post->id,
+            'content' => $post->content,
+            'image' => $post->image_url,
+            'likes_count' => $post->likes_count,
+            'comments_count' => $post->comments_count,
+            'is_liked_by_me' => $isLikedByMe,
+            'is_public' => (bool) $post->is_public,
+            'recent_likes' => $recentLikes,
+            'created_at' => $post->created_at,
+            'user' => [
+                'id' => $post->user->id,
+                'name' => $post->user->name,
                 'avatar' => $post->user->avatar_url,
             ],
         ];

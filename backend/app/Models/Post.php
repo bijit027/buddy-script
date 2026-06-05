@@ -19,7 +19,7 @@ class Post extends Model
     ];
 
     protected $casts = [
-        'likes_count'    => 'integer',
+        'likes_count' => 'integer',
         'comments_count' => 'integer',
     ];
 
@@ -42,6 +42,6 @@ class Post extends Model
     // Helper: image URL
     public function getImageUrlAttribute(): ?string
     {
-        return $this->image ? asset('storage/' . $this->image) : null;
+        return $this->image ? asset('storage/'.$this->image) : null;
     }
 }

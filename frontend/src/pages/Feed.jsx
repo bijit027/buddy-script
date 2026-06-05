@@ -12,7 +12,7 @@ import { useDarkMode } from '../hooks/useDarkMode';
 
 export default function Feed() {
   const { ref, inView } = useInView();
-  const { isDark, toggleDarkMode } = useDarkMode();
+  const { toggleDarkMode } = useDarkMode();
   const queryClient = useQueryClient();
 
   const {

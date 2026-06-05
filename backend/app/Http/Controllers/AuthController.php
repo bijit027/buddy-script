@@ -19,18 +19,18 @@ class AuthController extends Controller
     {
         $user = User::create([
             'first_name' => $request->first_name,
-            'last_name'  => $request->last_name,
-            'name'       => $request->first_name . ' ' . $request->last_name,
-            'email'      => $request->email,
-            'password'   => Hash::make($request->password),
+            'last_name' => $request->last_name,
+            'name' => $request->first_name.' '.$request->last_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'message' => 'Registration successful.',
-            'token'   => $token,
-            'user'    => $this->formatUser($user),
+            'token' => $token,
+            'user' => $this->formatUser($user),
         ], 201);
     }
 
@@ -40,20 +40,20 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        if (! Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'message' => 'Invalid email or password.',
             ], 401);
         }
 
         /** @var User $user */
-        $user  = Auth::user();
+        $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful.',
-            'token'   => $token,
-            'user'    => $this->formatUser($user),
+            'token' => $token,
+            'user' => $this->formatUser($user),
         ]);
     }
 
@@ -81,15 +81,15 @@ class AuthController extends Controller
     private function formatUser(User $user): array
     {
         return [
-            'id'          => $user->id,
-            'first_name'  => $user->first_name,
-            'last_name'   => $user->last_name,
-            'name'        => $user->full_name,
-            'email'       => $user->email,
-            'avatar'      => $user->avatar_url,
-            'bio'         => $user->bio,
+            'id' => $user->id,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'name' => $user->full_name,
+            'email' => $user->email,
+            'avatar' => $user->avatar_url,
+            'bio' => $user->bio,
             'cover_photo' => $user->cover_photo_url,
-            'created_at'  => $user->created_at,
+            'created_at' => $user->created_at,
         ];
     }
 }

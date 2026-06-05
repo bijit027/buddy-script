@@ -70,8 +70,9 @@ class User extends Authenticatable
     public function getFullNameAttribute(): string
     {
         if ($this->first_name) {
-            return trim($this->first_name . ' ' . $this->last_name);
+            return trim($this->first_name.' '.$this->last_name);
         }
+
         return $this->name ?? 'User';
     }
 
@@ -79,14 +80,15 @@ class User extends Authenticatable
     public function getAvatarUrlAttribute(): string
     {
         if ($this->avatar) {
-            return asset('storage/' . $this->avatar);
+            return asset('storage/'.$this->avatar);
         }
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->full_name) . '&background=4f46e5&color=fff';
+
+        return 'https://ui-avatars.com/api/?name='.urlencode($this->full_name).'&background=4f46e5&color=fff';
     }
 
     // Helper: cover photo URL
     public function getCoverPhotoUrlAttribute(): ?string
     {
-        return $this->cover_photo ? asset('storage/' . $this->cover_photo) : null;
+        return $this->cover_photo ? asset('storage/'.$this->cover_photo) : null;
     }
 }

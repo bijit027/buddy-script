@@ -22,9 +22,9 @@ class UserSeeder extends Seeder
             User::firstOrCreate(
                 ['email' => $userData['email']],
                 [
-                    'name'     => $userData['name'],
+                    'name' => $userData['name'],
                     'password' => Hash::make('Password123'),
-                    'bio'      => 'Hey there! I am using BuddyScript.',
+                    'bio' => 'Hey there! I am using BuddyScript.',
                 ]
             );
         }

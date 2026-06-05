@@ -11,26 +11,26 @@ use Illuminate\Database\Seeder;
 class PostSeeder extends Seeder
 {
     private array $postContents = [
-        "Just finished a 10km run this morning! Feeling amazing 🏃‍♂️ #fitness #morning",
+        'Just finished a 10km run this morning! Feeling amazing 🏃‍♂️ #fitness #morning',
         "Working on an exciting new project. Can't wait to share it with you all! 🚀",
-        "The sunset tonight was absolutely breathtaking 🌅 Nature never ceases to amaze me.",
+        'The sunset tonight was absolutely breathtaking 🌅 Nature never ceases to amaze me.',
         "Just tried that new coffee shop downtown. Best latte I've ever had ☕",
         "Reading 'Atomic Habits' for the second time. Different insights every read 📚",
-        "Team lunch was a blast today! Great people make work so much better 🍕",
-        "Finally got my home office setup just the way I like it. Productivity mode: ON 💻",
-        "Weekend hike completed! 8 miles, zero complaints. The views were worth it 🏔️",
-        "Hot take: remote work has made us all better at communication. Discuss 👇",
-        "Cooked a new recipe from scratch tonight. Pasta carbonara came out perfect! 🍝",
-        "Just adopted a rescue dog. Meet Max, the newest member of the family 🐕",
-        "Three years of learning to code. The journey has been incredible. Never stop learning!",
+        'Team lunch was a blast today! Great people make work so much better 🍕',
+        'Finally got my home office setup just the way I like it. Productivity mode: ON 💻',
+        'Weekend hike completed! 8 miles, zero complaints. The views were worth it 🏔️',
+        'Hot take: remote work has made us all better at communication. Discuss 👇',
+        'Cooked a new recipe from scratch tonight. Pasta carbonara came out perfect! 🍝',
+        'Just adopted a rescue dog. Meet Max, the newest member of the family 🐕',
+        'Three years of learning to code. The journey has been incredible. Never stop learning!',
         "Monday motivation: You don't have to be perfect, just consistent. 💪",
-        "That moment when your code finally works after 3 hours of debugging 🎉",
-        "Grateful for the small things: good coffee, sunshine, and fast internet ✨",
+        'That moment when your code finally works after 3 hours of debugging 🎉',
+        'Grateful for the small things: good coffee, sunshine, and fast internet ✨',
         "Started journaling daily. It's changed how I process my thoughts completely.",
-        "New playlist dropped for those late-night coding sessions 🎵 Link in bio.",
-        "The best investment you can make is in yourself. Never underestimate learning.",
-        "Throwback to that road trip last summer. We need to do it again ASAP 🚗",
-        "Just crossed the 1000 followers milestone! Thank you all for the support 🙏",
+        'New playlist dropped for those late-night coding sessions 🎵 Link in bio.',
+        'The best investment you can make is in yourself. Never underestimate learning.',
+        'Throwback to that road trip last summer. We need to do it again ASAP 🚗',
+        'Just crossed the 1000 followers milestone! Thank you all for the support 🙏',
     ];
 
     public function run(): void
@@ -43,7 +43,7 @@ class PostSeeder extends Seeder
             $post = Post::create([
                 'user_id' => $user->id,
                 'content' => $content,
-                'image'   => null, // No images needed for demo
+                'image' => null, // No images needed for demo
             ]);
 
             // Random likes (2-8 per post)

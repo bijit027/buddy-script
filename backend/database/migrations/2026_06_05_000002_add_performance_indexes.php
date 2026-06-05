@@ -12,7 +12,7 @@ return new class extends Migration
             $table->index('is_public');
             $table->index('created_at');
             // user_id is often indexed automatically by foreignId()->constrained(), but let's be explicit
-            // SQLite might throw an error if an index with the same columns exists implicitly, 
+            // SQLite might throw an error if an index with the same columns exists implicitly,
             // but Laravel's index() creates a named index, which is usually fine.
         });
 
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->index('post_id');
             $table->index('parent_id');
         });
-        
+
         // Note: 'likes' table already has morphs('likeable') which creates the likeable_type/likeable_id index,
         // and a unique(['user_id', 'likeable_id', 'likeable_type']) which covers user_id.
     }

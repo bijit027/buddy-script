@@ -14,10 +14,10 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name'            => ['required', 'string', 'max:100'],
-            'last_name'             => ['required', 'string', 'max:100'],
-            'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password'              => [
+            'first_name' => ['required', 'string', 'max:100'],
+            'last_name' => ['required', 'string', 'max:100'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => [
                 'required',
                 'string',
                 'min:8',
@@ -32,13 +32,13 @@ class RegisterRequest extends FormRequest
     {
         return [
             'first_name.required' => 'First name is required.',
-            'last_name.required'  => 'Last name is required.',
-            'email.required'      => 'Email address is required.',
-            'email.unique'        => 'This email is already registered.',
-            'password.required'   => 'Password is required.',
-            'password.min'        => 'Password must be at least 8 characters.',
-            'password.regex'      => 'Password must contain at least one uppercase letter and one number.',
-            'password.confirmed'  => 'Passwords do not match.',
+            'last_name.required' => 'Last name is required.',
+            'email.required' => 'Email address is required.',
+            'email.unique' => 'This email is already registered.',
+            'password.required' => 'Password is required.',
+            'password.min' => 'Password must be at least 8 characters.',
+            'password.regex' => 'Password must contain at least one uppercase letter and one number.',
+            'password.confirmed' => 'Passwords do not match.',
         ];
     }
 
@@ -49,8 +49,8 @@ class RegisterRequest extends FormRequest
     {
         $this->merge([
             'first_name' => strip_tags($this->first_name ?? ''),
-            'last_name'  => strip_tags($this->last_name ?? ''),
-            'email'      => strip_tags($this->email ?? ''),
+            'last_name' => strip_tags($this->last_name ?? ''),
+            'email' => strip_tags($this->email ?? ''),
         ]);
     }
 }

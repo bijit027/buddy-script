@@ -16,7 +16,7 @@ class CommentController extends Controller
     public function like(int $id): JsonResponse
     {
         $comment = Comment::findOrFail($id);
-        $userId  = Auth::id();
+        $userId = Auth::id();
 
         $existingLike = Like::where('user_id', $userId)
             ->where('likeable_type', Comment::class)
@@ -31,8 +31,8 @@ class CommentController extends Controller
         } else {
             // Like
             Like::create([
-                'user_id'       => $userId,
-                'likeable_id'   => $id,
+                'user_id' => $userId,
+                'likeable_id' => $id,
                 'likeable_type' => Comment::class,
             ]);
             $comment->increment('likes_count');
@@ -42,7 +42,7 @@ class CommentController extends Controller
         $comment->refresh();
 
         return response()->json([
-            'likes_count'    => $comment->likes_count,
+            'likes_count' => $comment->likes_count,
             'is_liked_by_me' => $isLiked,
         ]);
     }
@@ -59,23 +59,23 @@ class CommentController extends Controller
         ]);
 
         $reply = Comment::create([
-            'user_id'   => Auth::id(),
-            'post_id'   => $parentComment->post_id,
+            'user_id' => Auth::id(),
+            'post_id' => $parentComment->post_id,
             'parent_id' => $parentComment->id,
-            'content'   => strip_tags($request->content),
+            'content' => strip_tags($request->content),
         ]);
 
         $reply->load('user');
 
         return response()->json([
-            'id'             => $reply->id,
-            'content'        => $reply->content,
-            'created_at'     => $reply->created_at,
-            'likes_count'    => 0,
+            'id' => $reply->id,
+            'content' => $reply->content,
+            'created_at' => $reply->created_at,
+            'likes_count' => 0,
             'is_liked_by_me' => false,
-            'user'           => [
-                'id'     => $reply->user->id,
-                'name'   => $reply->user->name,
+            'user' => [
+                'id' => $reply->user->id,
+                'name' => $reply->user->name,
                 'avatar' => $reply->user->avatar_url,
             ],
         ], 201);
