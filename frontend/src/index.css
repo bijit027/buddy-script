@@ -23,11 +23,11 @@
 }
 
 /* ─── Dark mode overrides for loader ────────────────────────────────────── */
-body.dark-mode ._full_screen_loader {
+body._dark_wrapper ._full_screen_loader {
   background: #18191a;
 }
 
-body.dark-mode ._spinner {
+body._dark_wrapper ._spinner {
   border-color: #3a3b3c;
   border-top-color: #1877f2;
 }
@@ -169,35 +169,35 @@ body.dark-mode ._spinner {
   color: #b91c1c;
 }
 
-/* Profile menu always uses light theme (even when app is in dark mode) */
-body.dark-mode ._profile_menu {
-  background: #fff;
-  border-color: rgba(0, 0, 0, 0.06);
+/* Dark mode overrides for profile menu */
+body._dark_wrapper ._profile_menu {
+  background: #242526;
+  border-color: #3e4042;
   box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.06),
-    0 12px 24px -4px rgba(0, 0, 0, 0.1);
+    0 4px 6px -1px rgba(0, 0, 0, 0.4),
+    0 12px 24px -4px rgba(0, 0, 0, 0.5);
 }
 
-body.dark-mode ._profile_menu_header {
-  border-bottom-color: rgba(0, 0, 0, 0.06);
+body._dark_wrapper ._profile_menu_header {
+  border-bottom-color: #3e4042;
 }
 
-body.dark-mode ._profile_menu_name {
-  color: #1a1a2e;
+body._dark_wrapper ._profile_menu_name {
+  color: #e4e6eb;
 }
 
-body.dark-mode ._profile_menu_email {
-  color: #64748b;
+body._dark_wrapper ._profile_menu_email {
+  color: #b0b3b8;
 }
 
-body.dark-mode ._profile_menu_logout {
-  background: #fef2f2;
-  color: #dc2626;
+body._dark_wrapper ._profile_menu_logout {
+  background: rgba(220, 38, 38, 0.15);
+  color: #f87171;
 }
 
-body.dark-mode ._profile_menu_logout:hover {
-  background: #fee2e2;
-  color: #b91c1c;
+body._dark_wrapper ._profile_menu_logout:hover {
+  background: rgba(220, 38, 38, 0.25);
+  color: #fca5a5;
 }
 
 /* ─── Post owner actions menu ───────────────────────────────────────────── */
@@ -363,11 +363,23 @@ body.dark-mode ._profile_menu_logout:hover {
   cursor: not-allowed;
 }
 
-body.dark-mode ._post_actions_menu {
-  background: #fff;
-  border-color: rgba(0, 0, 0, 0.06);
+body._dark_wrapper ._post_actions_menu {
+  background: #242526;
+  border-color: #3e4042;
 }
 
-body.dark-mode ._post_actions_item {
-  color: #1a1a2e;
+body._dark_wrapper ._post_actions_item {
+  color: #e4e6eb;
+}
+
+body._dark_wrapper ._post_actions_item:hover:not(:disabled) {
+  background: #3a3b3c;
+}
+
+body._dark_wrapper ._post_actions_item--danger {
+  color: #f87171;
+}
+
+body._dark_wrapper ._post_actions_item--danger:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 0.15);
 }

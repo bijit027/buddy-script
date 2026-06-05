@@ -16,9 +16,9 @@ export function useDarkMode() {
 
   useEffect(() => {
     if (isDark) {
-      document.body.classList.add('dark-mode');
+      document.body.classList.add('_dark_wrapper');
     } else {
-      document.body.classList.remove('dark-mode');
+      document.body.classList.remove('_dark_wrapper');
     }
     localStorage.setItem('bs_dark_mode', String(isDark));
   }, [isDark]);
