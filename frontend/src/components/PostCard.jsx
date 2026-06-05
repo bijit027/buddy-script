@@ -14,6 +14,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
   const [newComment, setNewComment] = useState('');
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showLikesModal, setShowLikesModal] = useState(false);
   const [fullLikesList, setFullLikesList] = useState([]);
   const [isLoadingLikes, setIsLoadingLikes] = useState(false);
@@ -81,7 +82,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
       try {
         const res = await postService.getPostLikes(post.id);
         setFullLikesList(res.data);
-      } catch(err) {
+      } catch (err) {
         toast.error('Failed to load likes');
       } finally {
         setIsLoadingLikes(false);
@@ -126,14 +127,18 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
   };
 
   const handleCommentUpdate = (commentId, updates) => {
-    setComments((prev) => 
+    setComments((prev) =>
       prev.map((c) => (c.id === commentId ? { ...c, ...updates } : c))
     );
   };
 
-  const handleDelete = async () => {
+  const handleDeleteClick = () => {
     setShowMenu(false);
-    if (!window.confirm('Are you sure you want to delete this post?')) return;
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    setShowDeleteModal(false);
     setIsDeleting(true);
     try {
       await postService.deletePost(post.id);
@@ -218,7 +223,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
               </p>
             </div>
           </div>
-          
+
           {isOwner && (
             <div className="_post_actions" ref={menuRef}>
               <button
@@ -258,7 +263,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
                   </svg>
                   {post.is_public ? 'Make private' : 'Make public'}
                 </button>
-                <button type="button" className="_post_actions_item _post_actions_item--danger" onClick={handleDelete}>
+                <button type="button" className="_post_actions_item _post_actions_item--danger" onClick={handleDeleteClick}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                     <path
                       stroke="currentColor"
@@ -274,7 +279,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
             </div>
           )}
         </div>
-        
+
         {isEditing ? (
           <div className="_post_edit_form">
             <textarea
@@ -296,7 +301,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
         ) : (
           <h4 className="_feed_inner_timeline_post_title" style={{ fontWeight: 'normal', fontSize: 16 }}>{post.content}</h4>
         )}
-        
+
         {post.image && (
           <div className="_feed_inner_timeline_image" style={{ marginTop: 16 }}>
             <img src={post.image} alt="Post" className="_time_img" style={{ width: '100%', borderRadius: 8 }} />
@@ -341,13 +346,13 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
       </div>
 
       <div className="_feed_inner_timeline_reaction">
-        <button 
+        <button
           className={`_feed_inner_timeline_reaction_emoji _feed_reaction ${post.is_liked_by_me ? '_feed_reaction_active' : ''}`}
           onClick={handleLike}
           disabled={isLiking}
           style={{ color: post.is_liked_by_me ? '#1877f2' : 'inherit', fontWeight: post.is_liked_by_me ? 600 : 400 }}
         >
-          <span className="_feed_inner_timeline_reaction_link"> 
+          <span className="_feed_inner_timeline_reaction_link">
             <span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                 fill={post.is_liked_by_me ? '#1877f2' : 'none'}
@@ -361,12 +366,12 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
           </span>
         </button>
         <button className="_feed_inner_timeline_reaction_comment _feed_reaction" onClick={handleToggleComments}>
-          <span className="_feed_inner_timeline_reaction_link"> 
+          <span className="_feed_inner_timeline_reaction_link">
             <span>
               <svg className="_reaction_svg" xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21">
-                <path stroke="#000" d="M1 10.5c0-.464 0-.696.009-.893A9 9 0 019.607 1.01C9.804 1 10.036 1 10.5 1v0c.464 0 .696 0 .893.009a9 9 0 018.598 8.598c.009.197.009.429.009.893v6.046c0 1.36 0 2.041-.317 2.535a2 2 0 01-.602.602c-.494.317-1.174.317-2.535.317H10.5c-.464 0-.696 0-.893-.009a9 9 0 01-8.598-8.598C1 11.196 1 10.964 1 10.5v0z"/>
-                <path stroke="#000" strokeLinecap="round" strokeLinejoin="round" d="M6.938 9.313h7.125M10.5 14.063h3.563"/>
-              </svg>                                                      
+                <path stroke="#000" d="M1 10.5c0-.464 0-.696.009-.893A9 9 0 019.607 1.01C9.804 1 10.036 1 10.5 1v0c.464 0 .696 0 .893.009a9 9 0 018.598 8.598c.009.197.009.429.009.893v6.046c0 1.36 0 2.041-.317 2.535a2 2 0 01-.602.602c-.494.317-1.174.317-2.535.317H10.5c-.464 0-.696 0-.893-.009a9 9 0 01-8.598-8.598C1 11.196 1 10.964 1 10.5v0z" />
+                <path stroke="#000" strokeLinecap="round" strokeLinejoin="round" d="M6.938 9.313h7.125M10.5 14.063h3.563" />
+              </svg>
               Comment
             </span>
           </span>
@@ -374,21 +379,21 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
       </div>
 
       {showComments && (
-        <div className="_feed_inner_timeline_cooment_area" style={{ marginTop: 16 }}> 
+        <div className="_feed_inner_timeline_cooment_area" style={{ marginTop: 16 }}>
           <div className="_feed_inner_comment_box">
             <form className="_feed_inner_comment_box_form" onSubmit={handleAddComment}>
               <div className="_feed_inner_comment_box_content">
                 <div className="_feed_inner_comment_box_content_image">
-                  <img 
-                    src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff`} 
-                    alt={user?.name} 
-                    className="_comment_img" 
+                  <img
+                    src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff`}
+                    alt={user?.name}
+                    className="_comment_img"
                   />
                 </div>
                 <div className="_feed_inner_comment_box_content_txt" style={{ flex: 1 }}>
-                  <textarea 
-                    className="form-control _comment_textarea" 
-                    placeholder="Write a comment..." 
+                  <textarea
+                    className="form-control _comment_textarea"
+                    placeholder="Write a comment..."
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     disabled={isSubmittingComment}
@@ -397,9 +402,9 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
                 </div>
               </div>
               <div className="_feed_inner_comment_box_icon" style={{ display: 'flex', alignItems: 'center' }}>
-                <button 
-                  type="submit" 
-                  className="_feed_inner_comment_box_icon_btn" 
+                <button
+                  type="submit"
+                  className="_feed_inner_comment_box_icon_btn"
                   disabled={isSubmittingComment || !newComment.trim()}
                   style={{ background: 'none', border: 'none', padding: '0 8px', color: '#1877f2', fontWeight: 600 }}
                 >
@@ -408,7 +413,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
               </div>
             </form>
           </div>
-          
+
           <div className="_timline_comment_main" style={{ marginTop: 16, padding: '0 16px' }}>
             {isLoadingComments ? (
               <div style={{ textAlign: 'center', padding: 20 }}><span className="_spinner" style={{ width: 24, height: 24, display: 'inline-block' }} /></div>
@@ -416,13 +421,35 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
               <p style={{ textAlign: 'center', color: '#65676b', fontSize: 14 }}>No comments yet.</p>
             ) : (
               comments.map((comment) => (
-                <CommentCard 
-                  key={comment.id} 
-                  comment={comment} 
-                  onCommentUpdate={handleCommentUpdate} 
+                <CommentCard
+                  key={comment.id}
+                  comment={comment}
+                  onCommentUpdate={handleCommentUpdate}
                 />
               ))
             )}
+          </div>
+        </div>
+      )}
+
+      {showDeleteModal && (
+        <div className="_confirm_modal_backdrop" onClick={() => setShowDeleteModal(false)}>
+          <div className="_confirm_modal" onClick={(e) => e.stopPropagation()}>
+            <div className="_confirm_modal_header">
+              <h3 className="_confirm_modal_title">Delete Post?</h3>
+              <button className="_confirm_modal_close" onClick={() => setShowDeleteModal(false)}>&times;</button>
+            </div>
+            <div className="_confirm_modal_body">
+              Are you sure you want to delete this post? This action cannot be undone.
+            </div>
+            <div className="_confirm_modal_footer">
+              <button onClick={() => setShowDeleteModal(false)} className="_post_edit_btn _post_edit_btn--ghost">
+                Cancel
+              </button>
+              <button onClick={confirmDelete} className="_post_edit_btn _post_edit_btn--primary _confirm_modal_btn_delete">
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}

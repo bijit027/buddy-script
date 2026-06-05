@@ -383,3 +383,93 @@ body._dark_wrapper ._post_actions_item--danger {
 body._dark_wrapper ._post_actions_item--danger:hover:not(:disabled) {
   background: rgba(220, 38, 38, 0.15);
 }
+
+/* ─── Confirm modal (delete dialog) ────────────────────────────────────── */
+._confirm_modal_backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+._confirm_modal {
+  background: #fff;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+._confirm_modal_header {
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+._confirm_modal_title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+._confirm_modal_close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  color: #65676b;
+}
+
+._confirm_modal_body {
+  padding: 18px 20px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #444;
+}
+
+._confirm_modal_footer {
+  padding: 12px 20px 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+._confirm_modal_btn_delete {
+  background: #dc2626;
+}
+
+._confirm_modal_btn_delete:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+/* Dark mode for confirm modal */
+body._dark_wrapper ._confirm_modal {
+  background: #242526;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+body._dark_wrapper ._confirm_modal_header {
+  border-bottom-color: #3e4042;
+}
+
+body._dark_wrapper ._confirm_modal_title {
+  color: #e4e6eb;
+}
+
+body._dark_wrapper ._confirm_modal_close {
+  color: #b0b3b8;
+}
+
+body._dark_wrapper ._confirm_modal_body {
+  color: #b0b3b8;
+}
