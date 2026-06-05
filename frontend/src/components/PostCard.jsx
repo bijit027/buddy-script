@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { postService } from '../services/api';
 import CommentCard from './CommentCard';
 
-export default function PostCard({ post, onDelete, onUpdate, onLikeToggle }) {
+export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCommentAdded }) {
   const { user } = useAuth();
   const [isLiking, setIsLiking] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -116,6 +116,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle }) {
       const res = await postService.addComment(post.id, newComment.trim());
       setComments([res.data, ...comments]);
       setNewComment('');
+      onCommentAdded?.(post.id);
       toast.success('Comment added!');
     } catch (err) {
       toast.error('Failed to add comment.');
@@ -367,16 +368,6 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle }) {
                 <path stroke="#000" strokeLinecap="round" strokeLinejoin="round" d="M6.938 9.313h7.125M10.5 14.063h3.563"/>
               </svg>                                                      
               Comment
-            </span>
-          </span>
-        </button>
-        <button className="_feed_inner_timeline_reaction_share _feed_reaction">
-          <span className="_feed_inner_timeline_reaction_link"> 
-            <span>
-              <svg className="_reaction_svg" xmlns="http://www.w3.org/2000/svg" width="24" height="21" fill="none" viewBox="0 0 24 21">
-                <path stroke="#000" strokeLinejoin="round" d="M23 10.5L12.917 1v5.429C3.267 6.429 1 13.258 1 20c2.785-3.52 5.248-5.429 11.917-5.429V20L23 10.5z"/>
-              </svg>                                                 
-              Share
             </span>
           </span>
         </button>

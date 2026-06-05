@@ -10,7 +10,6 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -84,16 +83,6 @@ export default function Login() {
                 <p className="_social_login_content_para _mar_b8">Welcome back</p>
                 <h4 className="_social_login_content_title _titl4 _mar_b50">Login to your account</h4>
 
-                {/* Google Sign-in (UI placeholder) */}
-                <button type="button" className="_social_login_content_btn _mar_b40">
-                  <img src="/assets/images/google.svg" alt="Google" className="_google_img" />
-                  <span>Or sign-in with google</span>
-                </button>
-
-                <div className="_social_login_content_bottom_txt _mar_b40">
-                  <span>Or</span>
-                </div>
-
                 {/* Error Message */}
                 {error && (
                   <div style={{ color: '#e53e3e', fontSize: 13, marginBottom: 12, padding: '8px 12px', background: '#fff5f5', borderRadius: 6, border: '1px solid #fed7d7' }}>
@@ -140,28 +129,6 @@ export default function Login() {
                         >
                           {showPassword ? '🙈' : '👁️'}
                         </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    <div className="col-lg-6">
-                      <div className="form-check _social_login_form_check">
-                        <input
-                          id="login_remember"
-                          className="form-check-input _social_login_form_check_input"
-                          type="checkbox"
-                          checked={rememberMe}
-                          onChange={(e) => setRememberMe(e.target.checked)}
-                        />
-                        <label className="form-check-label _social_login_form_check_label" htmlFor="login_remember">
-                          Remember me
-                        </label>
-                      </div>
-                    </div>
-                    <div className="col-lg-6">
-                      <div className="_social_login_form_left">
-                        <p className="_social_login_form_left_para">Forgot password?</p>
                       </div>
                     </div>
                   </div>

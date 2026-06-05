@@ -157,6 +157,11 @@ class PostController extends Controller
     public function like(int $id): JsonResponse
     {
         $post = Post::findOrFail($id);
+
+        if ($response = $this->denyUnlessCanViewPost($post)) {
+            return $response;
+        }
+
         $userId = Auth::id();
 
         $existingLike = Like::where('user_id', $userId)
@@ -195,6 +200,10 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
 
+        if ($response = $this->denyUnlessCanViewPost($post)) {
+            return $response;
+        }
+
         $likes = $post->likes()->with('user')->latest()->get()->map(function ($l) {
             return [
                 'id' => $l->user->id,
@@ -212,6 +221,10 @@ class PostController extends Controller
     public function addComment(Request $request, int $id): JsonResponse
     {
         $post = Post::findOrFail($id);
+
+        if ($response = $this->denyUnlessCanViewPost($post)) {
+            return $response;
+        }
 
         $request->validate([
             'content' => ['required', 'string', 'max:1000'],
@@ -246,7 +259,11 @@ class PostController extends Controller
      */
     public function getComments(int $id): JsonResponse
     {
-        Post::findOrFail($id); // Ensure post exists
+        $post = Post::findOrFail($id);
+
+        if ($response = $this->denyUnlessCanViewPost($post)) {
+            return $response;
+        }
 
         $userId = Auth::id();
 
@@ -322,6 +339,18 @@ class PostController extends Controller
         });
 
         return response()->json($formatted);
+    }
+
+    /**
+     * Block access to private posts unless the authenticated user is the author.
+     */
+    private function denyUnlessCanViewPost(Post $post): ?JsonResponse
+    {
+        if (! $post->is_public && $post->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        return null;
     }
 
     /**

@@ -7,7 +7,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Auth routes (public)
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'register'])
+    ->middleware('throttle:5,1');
 Route::post('/login', [AuthController::class, 'login'])
     ->middleware('throttle:5,1'); // 5 attempts per minute per IP
 
@@ -18,13 +19,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Posts
     Route::get('/posts', [PostController::class, 'index']);
-    Route::post('/posts', [PostController::class, 'store']);
+    Route::post('/posts', [PostController::class, 'store'])
+        ->middleware('throttle:5,1');
     Route::put('/posts/{id}', [PostController::class, 'update']);
     Route::delete('/posts/{id}', [PostController::class, 'destroy']);
-    Route::post('/posts/{id}/like', [PostController::class, 'like']);
+    Route::post('/posts/{id}/like', [PostController::class, 'like'])
+        ->middleware('throttle:5,1');
     Route::get('/posts/{id}/likes', [PostController::class, 'getLikes']);
     Route::get('/posts/{id}/comments', [PostController::class, 'getComments']);
-    Route::post('/posts/{id}/comments', [PostController::class, 'addComment']);
+    Route::post('/posts/{id}/comments', [PostController::class, 'addComment'])
+        ->middleware('throttle:5,1');
     // Comments
     Route::post('/comments/{id}/like', [CommentController::class, 'like']);
     Route::post('/comments/{id}/reply', [CommentController::class, 'reply']);
