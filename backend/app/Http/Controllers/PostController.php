@@ -87,9 +87,7 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        if ($post->user_id !== Auth::id()) {
-            return response()->json(['message' => 'Forbidden. You can only edit your own posts.'], 403);
-        }
+        $this->authorize('update', $post);
 
         if ($request->has('content')) {
             $post->content = strip_tags($request->content);
@@ -137,9 +135,7 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        if ($post->user_id !== Auth::id()) {
-            return response()->json(['message' => 'Forbidden. You can only delete your own posts.'], 403);
-        }
+        $this->authorize('delete', $post);
 
         // Delete image from storage
         if ($post->image) {
@@ -158,9 +154,7 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        if ($response = $this->denyUnlessCanViewPost($post)) {
-            return $response;
-        }
+        $this->authorize('view', $post);
 
         $userId = Auth::id();
 
@@ -200,9 +194,7 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        if ($response = $this->denyUnlessCanViewPost($post)) {
-            return $response;
-        }
+        $this->authorize('view', $post);
 
         $likes = $post->likes()->with('user')->latest()->get()->map(function ($l) {
             return [
@@ -222,9 +214,7 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        if ($response = $this->denyUnlessCanViewPost($post)) {
-            return $response;
-        }
+        $this->authorize('view', $post);
 
         $request->validate([
             'content' => ['required', 'string', 'max:1000'],
@@ -261,9 +251,7 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        if ($response = $this->denyUnlessCanViewPost($post)) {
-            return $response;
-        }
+        $this->authorize('view', $post);
 
         $userId = Auth::id();
 
@@ -341,17 +329,6 @@ class PostController extends Controller
         return response()->json($formatted);
     }
 
-    /**
-     * Block access to private posts unless the authenticated user is the author.
-     */
-    private function denyUnlessCanViewPost(Post $post): ?JsonResponse
-    {
-        if (! $post->is_public && $post->user_id !== Auth::id()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        return null;
-    }
 
     /**
      * Consistent post format for all responses.

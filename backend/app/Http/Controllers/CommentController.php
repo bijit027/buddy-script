@@ -18,9 +18,7 @@ class CommentController extends Controller
     {
         $comment = Comment::with('post')->findOrFail($id);
 
-        if ($response = $this->denyUnlessCanViewPost($comment->post)) {
-            return $response;
-        }
+        $this->authorize('view', $comment->post);
 
         $userId = Auth::id();
 
@@ -60,9 +58,7 @@ class CommentController extends Controller
     {
         $parentComment = Comment::with('post')->findOrFail($id);
 
-        if ($response = $this->denyUnlessCanViewPost($parentComment->post)) {
-            return $response;
-        }
+        $this->authorize('view', $parentComment->post);
 
         $request->validate([
             'content' => ['required', 'string', 'max:1000'],
@@ -91,15 +87,4 @@ class CommentController extends Controller
         ], 201);
     }
 
-    /**
-     * Block access to private posts unless the authenticated user is the author.
-     */
-    private function denyUnlessCanViewPost(?Post $post): ?JsonResponse
-    {
-        if (! $post || (! $post->is_public && $post->user_id !== Auth::id())) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        return null;
-    }
 }
