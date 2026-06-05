@@ -14,16 +14,17 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
 COPY . .
-RUN composer dump-autoload --optimize \
-    && php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
+RUN composer dump-autoload --optimize
 
 RUN mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
 EXPOSE 8080
 
-CMD php artisan migrate --force \
+CMD php artisan config:clear \
+    && php artisan cache:clear \
+    && php artisan route:clear \
+    && php artisan view:clear \
+    && php artisan migrate --force \
     && php artisan storage:link --force \
-    && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
+    && php artisan serve --host=0.0.0.0 --port=${PORT:-8080} --docroot=public

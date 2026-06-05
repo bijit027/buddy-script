@@ -108,16 +108,6 @@ export default function Register() {
                 <p className="_social_registration_content_para _mar_b8">Get Started Now</p>
                 <h4 className="_social_registration_content_title _titl4 _mar_b50">Registration</h4>
 
-                {/* Google Sign-up (UI placeholder) */}
-                <button type="button" className="_social_registration_content_btn _mar_b40">
-                  <img src="/assets/images/google.svg" alt="Google" className="_google_img" />
-                  <span>Register with google</span>
-                </button>
-
-                <div className="_social_registration_content_bottom_txt _mar_b40">
-                  <span>Or</span>
-                </div>
-
                 {errors.general && (
                   <div style={{ color: '#e53e3e', fontSize: 13, marginBottom: 12, padding: '8px 12px', background: '#fff5f5', borderRadius: 6, border: '1px solid #fed7d7' }}>
                     {errors.general}

@@ -6,7 +6,6 @@ import LeftSidebar from '../components/LeftSidebar';
 import Navbar from '../components/Navbar';
 import PostCard from '../components/PostCard';
 import RightSidebar from '../components/RightSidebar';
-import StoriesBar from '../components/StoriesBar';
 import { postService } from '../services/api';
 import { useDarkMode } from '../hooks/useDarkMode';
 
@@ -88,8 +87,7 @@ export default function Feed() {
     });
   };
 
-  // Handle like toggle (optimistically update post in cache)
-  const handleLikeToggle = (postId, { is_liked_by_me, likes_count }) => {
+  const handleCommentAdded = (postId) => {
     queryClient.setQueryData(['feed'], (oldData) => {
       if (!oldData) return oldData;
       return {
@@ -97,8 +95,22 @@ export default function Feed() {
         pages: oldData.pages.map((page) => ({
           ...page,
           data: page.data.map((p) =>
-            p.id === postId ? { ...p, is_liked_by_me, likes_count } : p
+            p.id === postId ? { ...p, comments_count: p.comments_count + 1 } : p
           ),
+        })),
+      };
+    });
+  };
+
+  // Handle like toggle (optimistically update post in cache)
+  const handleLikeToggle = (postId, updates) => {
+    queryClient.setQueryData(['feed'], (oldData) => {
+      if (!oldData) return oldData;
+      return {
+        ...oldData,
+        pages: oldData.pages.map((page) => ({
+          ...page,
+          data: page.data.map((p) => (p.id === postId ? { ...p, ...updates } : p)),
         })),
       };
     });
@@ -144,9 +156,6 @@ export default function Feed() {
               <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12">
                 <div className="_layout_middle_wrap">
                   <div className="_layout_middle_inner">
-                    {/* Stories */}
-                    <StoriesBar />
-
                     {/* Create Post */}
                     <CreatePostCard onPostCreated={handlePostCreated} />
 
@@ -170,6 +179,7 @@ export default function Feed() {
                                 onDelete={handlePostDeleted}
                                 onUpdate={handlePostUpdated}
                                 onLikeToggle={handleLikeToggle}
+                                onCommentAdded={handleCommentAdded}
                               />
                             ))
                           )}

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Like;
+use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,12 @@ class CommentController extends Controller
      */
     public function like(int $id): JsonResponse
     {
-        $comment = Comment::findOrFail($id);
+        $comment = Comment::with('post')->findOrFail($id);
+
+        if ($response = $this->denyUnlessCanViewPost($comment->post)) {
+            return $response;
+        }
+
         $userId = Auth::id();
 
         $existingLike = Like::where('user_id', $userId)
@@ -52,7 +58,11 @@ class CommentController extends Controller
      */
     public function reply(Request $request, int $id): JsonResponse
     {
-        $parentComment = Comment::findOrFail($id);
+        $parentComment = Comment::with('post')->findOrFail($id);
+
+        if ($response = $this->denyUnlessCanViewPost($parentComment->post)) {
+            return $response;
+        }
 
         $request->validate([
             'content' => ['required', 'string', 'max:1000'],
@@ -79,5 +89,17 @@ class CommentController extends Controller
                 'avatar' => $reply->user->avatar_url,
             ],
         ], 201);
+    }
+
+    /**
+     * Block access to private posts unless the authenticated user is the author.
+     */
+    private function denyUnlessCanViewPost(?Post $post): ?JsonResponse
+    {
+        if (! $post || (! $post->is_public && $post->user_id !== Auth::id())) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        return null;
     }
 }

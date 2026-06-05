@@ -7,6 +7,10 @@ A full-stack social media application built with React.js and Laravel.
 - **Backend:** Laravel 11, Laravel Sanctum, MySQL
 - **Auth:** Token-based authentication (Sanctum Bearer tokens)
 
+## Scope note
+
+Some sidebar and template sections from the original HTML design (stories, suggested people, social login, share/video actions, notification badges) are intentionally excluded from this project scope. The implementation focuses on authentication, feed, posts, likes, comments, and public/private visibility.
+
 ## Features
 - User registration and login with validation
 - JWT-like token auth with 7-day expiry

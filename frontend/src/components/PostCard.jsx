@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { postService } from '../services/api';
 import CommentCard from './CommentCard';
 
-export default function PostCard({ post, onDelete, onUpdate, onLikeToggle }) {
+export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCommentAdded }) {
   const { user } = useAuth();
   const [isLiking, setIsLiking] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -45,23 +45,30 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle }) {
     if (isLiking) return;
     setIsLiking(true);
 
-    // Optimistic update
     const prevLiked = post.is_liked_by_me;
     const prevCount = post.likes_count;
+    const prevRecentLikes = post.recent_likes || [];
+
+    const nextRecentLikes = !prevLiked
+      ? [{ id: user.id, name: user.name, avatar: user.avatar }, ...prevRecentLikes.filter((l) => l.id !== user.id)].slice(0, 3)
+      : prevRecentLikes.filter((l) => l.id !== user.id);
 
     onLikeToggle(post.id, {
       is_liked_by_me: !prevLiked,
       likes_count: prevLiked ? prevCount - 1 : prevCount + 1,
+      recent_likes: nextRecentLikes,
     });
 
     try {
       const res = await postService.likePost(post.id);
-      // Sync exact count from server
       onLikeToggle(post.id, res.data);
     } catch (err) {
       toast.error('Failed to like post.');
-      // Revert
-      onLikeToggle(post.id, { is_liked_by_me: prevLiked, likes_count: prevCount });
+      onLikeToggle(post.id, {
+        is_liked_by_me: prevLiked,
+        likes_count: prevCount,
+        recent_likes: prevRecentLikes,
+      });
     } finally {
       setIsLiking(false);
     }
@@ -109,6 +116,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle }) {
       const res = await postService.addComment(post.id, newComment.trim());
       setComments([res.data, ...comments]);
       setNewComment('');
+      onCommentAdded?.(post.id);
       toast.success('Comment added!');
     } catch (err) {
       toast.error('Failed to add comment.');
@@ -251,8 +259,14 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle }) {
                   {post.is_public ? 'Make private' : 'Make public'}
                 </button>
                 <button type="button" className="_post_actions_item _post_actions_item--danger" onClick={handleDelete}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 18 18" aria-hidden="true">
-                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M2.25 4.5h13.5M6 4.5V3a1.5 1.5 011.5-1.5h3A1.5 1.5 0112 3v1.5m2.25 0V15a1.5 1.5 01-1.5 1.5h-7.5a1.5 1.5 01-1.5-1.5V4.5h10.5z" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6"
+                    />
                   </svg>
                   Delete post
                 </button>
@@ -291,29 +305,35 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle }) {
       </div>
 
       <div className="_feed_inner_timeline_total_reacts _padd_r24 _padd_l24 _mar_b26" style={{ marginTop: 16 }}>
-        <div className="_feed_inner_timeline_total_reacts_image" onClick={fetchLikes} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-          <img src="/assets/images/react_img1.png" alt="Like" className="_react_img1" style={{ position: 'relative', zIndex: 10 }} />
-          {post.recent_likes && post.recent_likes.length > 0 ? (
-            <>
-              {post.recent_likes.map((liker, idx) => (
-                <img 
-                  key={liker.id} 
-                  src={liker.avatar} 
-                  alt={liker.name} 
-                  title={liker.name}
-                  className="_react_img"
-                  style={{ objectFit: 'cover', position: 'relative', zIndex: 9 - idx }} 
-                />
-              ))}
-              <span style={{ marginLeft: 8, fontSize: 14, color: '#65676b' }}>
-                Liked by <strong>{post.recent_likes[0].name}</strong> {post.likes_count > 1 ? `and ${post.likes_count - 1} others` : ''}
-              </span>
-            </>
-          ) : post.likes_count > 0 ? (
-            <p className="_feed_inner_timeline_total_reacts_para" style={{ position: 'relative', zIndex: 9 }}>{post.likes_count}</p>
-          ) : null}
-        </div>
-        <div className="_feed_inner_timeline_total_reacts_txt">
+        {post.likes_count > 0 ? (
+          <div className="_feed_inner_timeline_total_reacts_image" onClick={fetchLikes} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+            {post.recent_likes && post.recent_likes.length > 0 ? (
+              <>
+                {post.recent_likes.map((liker, idx) => (
+                  <img
+                    key={liker.id}
+                    src={liker.avatar}
+                    alt={liker.name}
+                    title={liker.name}
+                    className="_react_img"
+                    style={{
+                      objectFit: 'cover',
+                      position: 'relative',
+                      zIndex: post.recent_likes.length - idx,
+                      marginLeft: idx === 0 ? 0 : -16,
+                    }}
+                  />
+                ))}
+                <span style={{ marginLeft: 8, fontSize: 14, color: '#65676b' }}>
+                  Liked by <strong>{post.recent_likes[0].name}</strong> {post.likes_count > 1 ? `and ${post.likes_count - 1} others` : ''}
+                </span>
+              </>
+            ) : (
+              <p className="_feed_inner_timeline_total_reacts_para" style={{ marginLeft: 0 }}>{post.likes_count}</p>
+            )}
+          </div>
+        ) : null}
+        <div className="_feed_inner_timeline_total_reacts_txt" style={post.likes_count === 0 ? { marginLeft: 'auto' } : undefined}>
           <p className="_feed_inner_timeline_total_reacts_para1">
             <a href="#0" onClick={(e) => { e.preventDefault(); handleToggleComments(); }}><span>{post.comments_count}</span> Comment{post.comments_count !== 1 ? 's' : ''}</a>
           </p>
@@ -348,16 +368,6 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle }) {
                 <path stroke="#000" strokeLinecap="round" strokeLinejoin="round" d="M6.938 9.313h7.125M10.5 14.063h3.563"/>
               </svg>                                                      
               Comment
-            </span>
-          </span>
-        </button>
-        <button className="_feed_inner_timeline_reaction_share _feed_reaction">
-          <span className="_feed_inner_timeline_reaction_link"> 
-            <span>
-              <svg className="_reaction_svg" xmlns="http://www.w3.org/2000/svg" width="24" height="21" fill="none" viewBox="0 0 24 21">
-                <path stroke="#000" strokeLinejoin="round" d="M23 10.5L12.917 1v5.429C3.267 6.429 1 13.258 1 20c2.785-3.52 5.248-5.429 11.917-5.429V20L23 10.5z"/>
-              </svg>                                                 
-              Share
             </span>
           </span>
         </button>

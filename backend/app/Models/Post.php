@@ -14,8 +14,6 @@ class Post extends Model
         'content',
         'image',
         'is_public',
-        'likes_count',
-        'comments_count',
     ];
 
     protected $casts = [
