@@ -158,10 +158,13 @@ class PostController extends Controller
         $comment->load('user');
 
         return response()->json([
-            'id'         => $comment->id,
-            'content'    => $comment->content,
-            'created_at' => $comment->created_at,
-            'user'       => [
+            'id'             => $comment->id,
+            'content'        => $comment->content,
+            'created_at'     => $comment->created_at,
+            'likes_count'    => 0,
+            'is_liked_by_me' => false,
+            'replies'        => [],
+            'user'           => [
                 'id'     => $comment->user->id,
                 'name'   => $comment->user->name,
                 'avatar' => $comment->user->avatar_url,
@@ -176,22 +179,56 @@ class PostController extends Controller
     {
         Post::findOrFail($id); // Ensure post exists
 
-        $comments = Comment::with('user')
+        $userId = Auth::id();
+
+        $comments = Comment::with(['user', 'replies.user'])
             ->where('post_id', $id)
+            ->whereNull('parent_id')
             ->latest()
-            ->get()
-            ->map(fn (Comment $comment) => [
-                'id'         => $comment->id,
-                'content'    => $comment->content,
-                'created_at' => $comment->created_at,
-                'user'       => [
+            ->get();
+
+        $allCommentIds = $comments->pluck('id')->merge(
+            $comments->flatMap(fn($c) => $c->replies->pluck('id'))
+        )->unique()->toArray();
+
+        $likedCommentIds = Like::where('user_id', $userId)
+            ->where('likeable_type', Comment::class)
+            ->whereIn('likeable_id', $allCommentIds)
+            ->pluck('likeable_id')
+            ->toArray();
+
+        $formatted = $comments->map(function (Comment $comment) use ($likedCommentIds) {
+            $formattedReplies = $comment->replies->sortBy('created_at')->map(function ($reply) use ($likedCommentIds) {
+                return [
+                    'id'             => $reply->id,
+                    'content'        => $reply->content,
+                    'created_at'     => $reply->created_at,
+                    'likes_count'    => $reply->likes_count,
+                    'is_liked_by_me' => in_array($reply->id, $likedCommentIds),
+                    'user'           => [
+                        'id'     => $reply->user->id,
+                        'name'   => $reply->user->name,
+                        'avatar' => $reply->user->avatar_url,
+                    ],
+                ];
+            })->values();
+
+            return [
+                'id'             => $comment->id,
+                'content'        => $comment->content,
+                'created_at'     => $comment->created_at,
+                'likes_count'    => $comment->likes_count,
+                'is_liked_by_me' => in_array($comment->id, $likedCommentIds),
+                'replies'        => $formattedReplies,
+                'user'           => [
                     'id'     => $comment->user->id,
                     'name'   => $comment->user->name,
                     'avatar' => $comment->user->avatar_url,
                 ],
-            ]);
+            ];
+        });
 
-        return response()->json($comments);
+        return response()->json($formatted);
     }
 
     /**

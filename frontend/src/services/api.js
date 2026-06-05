@@ -68,6 +68,10 @@ export const postService = {
   getComments: (id) => api.get(`/posts/${id}/comments`),
 
   addComment: (id, content) => api.post(`/posts/${id}/comments`, { content }),
+
+  likeComment: (id) => api.post(`/comments/${id}/like`),
+
+  replyToComment: (id, content) => api.post(`/comments/${id}/reply`, { content }),
 };
 
 // ─── Profile Service ──────────────────────────────────────────────────────────

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { postService } from '../services/api';
+import CommentCard from './CommentCard';
 
 export default function PostCard({ post, onDelete, onLikeToggle }) {
   const { user } = useAuth();
@@ -77,6 +78,12 @@ export default function PostCard({ post, onDelete, onLikeToggle }) {
     } finally {
       setIsSubmittingComment(false);
     }
+  };
+
+  const handleCommentUpdate = (commentId, updates) => {
+    setComments((prev) => 
+      prev.map((c) => (c.id === commentId ? { ...c, ...updates } : c))
+    );
   };
 
   const handleDelete = async () => {
@@ -253,27 +260,11 @@ export default function PostCard({ post, onDelete, onLikeToggle }) {
               <p style={{ textAlign: 'center', color: '#65676b', fontSize: 14 }}>No comments yet.</p>
             ) : (
               comments.map((comment) => (
-                <div key={comment.id} className="_comment_main" style={{ marginBottom: 16 }}>
-                  <div className="_comment_image">
-                    <a href="#0" className="_comment_image_link">
-                      <img src={comment.user.avatar} alt={comment.user.name} className="_comment_img1" />
-                    </a>
-                  </div>
-                  <div className="_comment_area">
-                    <div className="_comment_details">
-                      <div className="_comment_details_top">
-                        <div className="_comment_name">
-                          <a href="#0">
-                            <h4 className="_comment_name_title">{comment.user.name}</h4>
-                          </a>
-                        </div>
-                      </div>
-                      <div className="_comment_status">
-                        <p className="_comment_status_text"><span>{comment.content}</span></p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <CommentCard 
+                  key={comment.id} 
+                  comment={comment} 
+                  onCommentUpdate={handleCommentUpdate} 
+                />
               ))
             )}
           </div>
