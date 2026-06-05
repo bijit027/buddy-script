@@ -80,21 +80,4 @@ class CommentController extends Controller
             ],
         ], 201);
     }
-<<<<<<< Updated upstream
-=======
-
-    /**
-     * Block access to private posts unless the authenticated user is the author.
-     */
-    private function denyUnlessCanViewPost(?Post $post): ?JsonResponse
-    {
-        if (! $post) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        $this->authorize('view', $post);
-
-        return null;
-    }
->>>>>>> Stashed changes
 }
