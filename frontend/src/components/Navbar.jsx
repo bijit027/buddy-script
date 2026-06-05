@@ -104,37 +104,24 @@ export default function Navbar() {
               </div>
             </button>
 
-            <div className={`_nav_profile_dropdown _profile_dropdown${showProfileDrop ? ' show' : ''}`}>
-              <div className="_nav_profile_dropdown_info">
-                <div className="_nav_profile_dropdown_image">
-                  <img
-                    src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff`}
-                    alt={user?.name || 'Profile'}
-                    className="_nav_drop_img"
-                  />
-                </div>
-                <div className="_nav_profile_dropdown_info_txt">
-                  <h4 className="_nav_dropdown_title">{user?.name}</h4>
-                  <a href="#0" className="_nav_drop_profile" onClick={(e) => e.preventDefault()}>
-                    View Profile
-                  </a>
+            <div className={`_profile_menu${showProfileDrop ? ' _profile_menu--open' : ''}`}>
+              <div className="_profile_menu_header">
+                <img
+                  src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff&size=64`}
+                  alt=""
+                  className="_profile_menu_avatar"
+                />
+                <div className="_profile_menu_meta">
+                  <p className="_profile_menu_name">{user?.name}</p>
+                  <p className="_profile_menu_email">{user?.email}</p>
                 </div>
               </div>
-              <hr />
-              <ul className="_nav_dropdown_list">
-                <li className="_nav_dropdown_list_item _nav_dropdown_list_item_last">
-                  <button type="button" onClick={handleLogout} className="_nav_dropdown_link _nav_dropdown_logout_btn">
-                    <div className="_nav_drop_info">
-                      <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
-                          <path stroke="#377DFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M7 16.5H4.5A1.5 1.5 0 013 15V3A1.5 1.5 0 014.5 1.5H7M12 12.75L15.75 9 12 5.25M15.75 9H7" />
-                        </svg>
-                      </span>
-                      Logout
-                    </div>
-                  </button>
-                </li>
-              </ul>
+              <button type="button" onClick={handleLogout} className="_profile_menu_logout">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 18 18" aria-hidden="true">
+                  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M7 16.5H4.5A1.5 1.5 0 013 15V3A1.5 1.5 0 014.5 1.5H7M12 12.75L15.75 9 12 5.25M15.75 9H7" />
+                </svg>
+                Log out
+              </button>
             </div>
           </div>
           </div>

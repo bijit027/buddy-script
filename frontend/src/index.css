@@ -32,33 +32,170 @@ body.dark-mode ._spinner {
   border-top-color: #1877f2;
 }
 
-/* ─── Profile dropdown toggle ───────────────────────────────────────────── */
+/* ─── Profile menu (compact) ────────────────────────────────────────────── */
 ._header_nav_profile_toggle {
   display: flex;
   align-items: center;
+  gap: 2px;
   border: none;
   background: transparent;
-  padding: 0;
+  padding: 4px 6px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+._header_nav_profile_toggle:hover {
+  background: rgba(0, 0, 0, 0.04);
 }
 
 ._header_nav_profile_toggle:hover ._header_nav_para {
   color: var(--color5) !important;
 }
 
-._nav_profile_dropdown.show {
+._header_nav_profile ._header_nav_profile_image {
+  width: 28px;
+  margin-right: 6px;
+}
+
+._header_nav_profile ._nav_profile_img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+._header_nav_profile ._header_nav_para {
+  font-size: 14px !important;
+  line-height: 20px !important;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+._profile_menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  max-width: 240px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.06),
+    0 12px 24px -4px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px) scale(0.98);
+  transform-origin: top right;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    visibility 0.18s;
   z-index: 1050;
 }
 
-._nav_dropdown_logout_btn {
-  width: 100%;
-  border: none;
-  background: transparent;
-  padding: 0;
-  text-align: left;
-  cursor: pointer;
+._profile_menu--open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
 }
 
-._nav_dropdown_list_item_last {
-  margin-bottom: 0;
+._profile_menu_header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 4px 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 8px;
+}
+
+._profile_menu_avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+._profile_menu_meta {
+  min-width: 0;
+  flex: 1;
+}
+
+._profile_menu_name {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #1a1a2e;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+._profile_menu_email {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.35;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+._profile_menu_logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #dc2626;
+  background: #fef2f2;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+._profile_menu_logout:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Profile menu always uses light theme (even when app is in dark mode) */
+body.dark-mode ._profile_menu {
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.06),
+    0 12px 24px -4px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode ._profile_menu_header {
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+body.dark-mode ._profile_menu_name {
+  color: #1a1a2e;
+}
+
+body.dark-mode ._profile_menu_email {
+  color: #64748b;
+}
+
+body.dark-mode ._profile_menu_logout {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+body.dark-mode ._profile_menu_logout:hover {
+  background: #fee2e2;
+  color: #b91c1c;
 }
