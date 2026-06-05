@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Comment;
+use App\Models\Like;
 use App\Models\Post;
-use App\Models\PostLike;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -49,9 +49,10 @@ class PostSeeder extends Seeder
             // Random likes (2-8 per post)
             $likers = $users->random(rand(2, min(8, $users->count())));
             foreach ($likers as $liker) {
-                PostLike::firstOrCreate([
+                Like::firstOrCreate([
                     'user_id' => $liker->id,
-                    'post_id' => $post->id,
+                    'likeable_id' => $post->id,
+                    'likeable_type' => Post::class,
                 ]);
             }
             $post->update(['likes_count' => $likers->count()]);
