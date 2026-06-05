@@ -258,8 +258,14 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle }) {
                   {post.is_public ? 'Make private' : 'Make public'}
                 </button>
                 <button type="button" className="_post_actions_item _post_actions_item--danger" onClick={handleDelete}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 18 18" aria-hidden="true">
-                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M2.25 4.5h13.5M6 4.5V3a1.5 1.5 011.5-1.5h3A1.5 1.5 0112 3v1.5m2.25 0V15a1.5 1.5 01-1.5 1.5h-7.5a1.5 1.5 01-1.5-1.5V4.5h10.5z" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6"
+                    />
                   </svg>
                   Delete post
                 </button>

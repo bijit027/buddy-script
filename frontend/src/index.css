@@ -201,6 +201,10 @@ body.dark-mode ._profile_menu_logout:hover {
 }
 
 /* ─── Post owner actions menu ───────────────────────────────────────────── */
+._feed_inner_timeline_post_top {
+  overflow: visible;
+}
+
 ._post_actions {
   position: relative;
   flex-shrink: 0;
@@ -238,7 +242,15 @@ body.dark-mode ._profile_menu_logout:hover {
   transform: translateY(4px) scale(0.98);
   transform-origin: top right;
   transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
-  z-index: 20;
+  z-index: 50;
+}
+
+._post_actions_item svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  display: block;
 }
 
 ._post_actions_menu--open {
