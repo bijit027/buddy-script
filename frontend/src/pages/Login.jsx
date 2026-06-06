@@ -99,10 +99,10 @@ export default function Login() {
                         <input
                           id="login_email"
                           type="email"
-                          className="form-control _social_login_input"
+                          className={`form-control _social_login_input ${styles.input}`}
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder="Enter your email"
+                          placeholder="you@example.com"
                           autoComplete="email"
                           disabled={isLoading}
                         />
@@ -115,10 +115,10 @@ export default function Login() {
                         <input
                           id="login_password"
                           type={showPassword ? 'text' : 'password'}
-                          className="form-control _social_login_input"
+                          className={`form-control _social_login_input ${styles.input}`}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          placeholder="Enter your password"
+                          placeholder="Your password"
                           autoComplete="current-password"
                           disabled={isLoading}
                         />

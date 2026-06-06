@@ -1740,6 +1740,10 @@
     -o-transition:.2s all ease;
     transition:.2s all ease;
 }
+._social_registration_form_btn_link {
+    white-space: nowrap;
+    width: 100%;
+}
 ._feed_inner_timeline_post_top {
     display: -webkit-box;
     display: -ms-flexbox;

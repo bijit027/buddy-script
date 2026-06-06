@@ -124,10 +124,10 @@ export default function Register() {
                         <input
                           id="reg_first_name"
                           type="text"
-                          className="form-control _social_registration_input"
+                          className={`form-control _social_registration_input ${styles.input}`}
                           value={firstName}
                           onChange={(e) => setFirstName(e.target.value)}
-                          placeholder="First name"
+                          placeholder="e.g. John"
                           disabled={isLoading}
                         />
                         <FieldError field="first_name" />
@@ -141,10 +141,10 @@ export default function Register() {
                         <input
                           id="reg_last_name"
                           type="text"
-                          className="form-control _social_registration_input"
+                          className={`form-control _social_registration_input ${styles.input}`}
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
-                          placeholder="Last name"
+                          placeholder="e.g. Doe"
                           disabled={isLoading}
                         />
                         <FieldError field="last_name" />
@@ -158,10 +158,10 @@ export default function Register() {
                         <input
                           id="reg_email"
                           type="email"
-                          className="form-control _social_registration_input"
+                          className={`form-control _social_registration_input ${styles.input}`}
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder="Enter your email"
+                          placeholder="you@example.com"
                           disabled={isLoading}
                         />
                         <FieldError field="email" />
@@ -172,13 +172,14 @@ export default function Register() {
                     <div className="col-xl-12">
                       <div className="_social_registration_form_input _mar_b14">
                         <label className="_social_registration_label _mar_b8" htmlFor="reg_password">Password</label>
+                        <p className={styles.fieldHint}>At least 8 characters, 1 uppercase letter, and 1 number.</p>
                         <input
                           id="reg_password"
                           type="password"
-                          className="form-control _social_registration_input"
+                          className={`form-control _social_registration_input ${styles.input}`}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          placeholder="Min 8 chars, 1 uppercase, 1 number"
+                          placeholder="Create a password"
                           disabled={isLoading}
                         />
                         <FieldError field="password" />
@@ -192,10 +193,10 @@ export default function Register() {
                         <input
                           id="reg_confirm_password"
                           type="password"
-                          className="form-control _social_registration_input"
+                          className={`form-control _social_registration_input ${styles.input}`}
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          placeholder="Repeat your password"
+                          placeholder="Re-enter your password"
                           disabled={isLoading}
                         />
                         <FieldError field="confirmPassword" />
