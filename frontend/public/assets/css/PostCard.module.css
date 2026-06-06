@@ -15,15 +15,20 @@
 }
 
 .visibilityBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 11px;
   padding: 2px 8px;
   border-radius: 12px;
   font-weight: 500;
+  background: #e7f3ff;
+  color: #1877f2;
 }
 
 .visibilityBadge.private {
-  background: #fee2e2;
-  color: #dc2626;
+  background: #fef3c7;
+  color: #b45309;
 }
 
 .postActionsTrigger {
