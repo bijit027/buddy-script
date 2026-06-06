@@ -329,7 +329,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
                   />
                 ))}
                 <span className={styles.reactsText}>
-                  Liked by <strong>{post.recent_likes[0].name}</strong> {post.likes_count > 1 ? `and ${post.likes_count - 1} others` : ''}
+                  Liked by <strong>{post.recent_likes[0].id === user?.id ? 'you' : post.recent_likes[0].name}</strong> {post.likes_count > 1 ? `and ${post.likes_count - 1} others` : ''}
                 </span>
               </>
             ) : (

@@ -172,3 +172,57 @@
 .likeAvatars span.reply {
   font-size: 11px;
 }
+
+.likesTooltip {
+  position: fixed;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 8px 0;
+  min-width: 200px;
+  max-width: 300px;
+  z-index: 10000;
+}
+
+.tooltipLoading {
+  padding: 12px 16px;
+  color: #65676b;
+  font-size: 13px;
+  text-align: center;
+}
+
+.tooltipList {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.tooltipItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  cursor: default;
+}
+
+.tooltipItem:hover {
+  background: #f0f2f5;
+}
+
+.tooltipItem img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.tooltipItem span {
+  font-size: 13px;
+  color: #050505;
+}
+
+.tooltipEmpty {
+  padding: 12px 16px;
+  color: #65676b;
+  font-size: 13px;
+  text-align: center;
+}

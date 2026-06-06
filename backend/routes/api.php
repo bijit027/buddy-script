@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Comments
     Route::post('/comments/{comment}/like', [CommentController::class, 'like']);
     Route::post('/comments/{comment}/reply', [CommentController::class, 'reply']);
+    Route::get('/comments/{comment}/likes', [CommentController::class, 'getLikes']);
 
     // Profile
     Route::put('/profile', [ProfileController::class, 'update']);

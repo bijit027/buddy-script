@@ -26,4 +26,10 @@ class CommentController extends Controller
         $data = $this->commentService->addReply($request, $comment);
         return response()->json($data, 201);
     }
+
+    public function getLikes(Comment $comment): JsonResponse
+    {
+        $this->authorize('view', $comment->post);
+        return response()->json($this->commentService->getLikes($comment));
+    }
 }

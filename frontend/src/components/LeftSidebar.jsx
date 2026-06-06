@@ -19,23 +19,7 @@ export default function LeftSidebar() {
     <>
       <div className="_layout_left_sidebar_inner">
         <div className="_left_inner_area_explore _padd_t24 _padd_b6 _padd_r24 _padd_l24 _b_radious6 _feed_inner_area">
-          <h4 className="_left_inner_area_explore_title _title5 _mar_b24">Profile</h4>
-          <div className="_left_sidebar_profile" style={{ marginBottom: 24, textAlign: 'center' }}>
-            <div className="_left_sidebar_profile_img" style={{ marginBottom: 12 }}>
-              <img
-                src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff&size=80`}
-                alt={user?.name}
-                className="_profile_img"
-                style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover' }}
-              />
-            </div>
-            <div className="_left_sidebar_profile_txt">
-              <h6 className="_profile_name" style={{ fontSize: 16, fontWeight: 600, color: '#050505' }}>{user?.name}</h6>
-              <p className="_profile_para" style={{ fontSize: 14, color: '#65676b', marginTop: 4 }}>{user?.bio || 'Hey there! I am using BuddyScript.'}</p>
-            </div>
-          </div>
-
-          <h4 className="_left_inner_area_explore_title _title5 _mar_b24" style={{ marginTop: 24 }}>Explore</h4>
+          <h4 className="_left_inner_area_explore_title _title5 _mar_b24">Explore</h4>
           <ul className="_left_inner_area_explore_list">
             {NAV_LINKS.map(({ icon, label }) => (
               <li key={label} className="_left_inner_area_explore_item">

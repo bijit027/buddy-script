@@ -10,6 +10,11 @@ export default function CommentCard({ comment, onCommentUpdate }) {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replyContent, setReplyContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showLikesTooltip, setShowLikesTooltip] = useState(false);
+  const [activeReplyId, setActiveReplyId] = useState(null);
+  const [likers, setLikers] = useState([]);
+  const [isLoadingLikers, setIsLoadingLikers] = useState(false);
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
   const handleLike = async () => {
     if (isLiking) return;
@@ -23,6 +28,9 @@ export default function CommentCard({ comment, onCommentUpdate }) {
       is_liked_by_me: !prevLiked,
       likes_count: prevLiked ? prevCount - 1 : prevCount + 1
     });
+
+    // Clear likers cache to force refetch on next hover
+    setLikers([]);
 
     try {
       const res = await postService.likeComment(comment.id);
@@ -53,6 +61,46 @@ export default function CommentCard({ comment, onCommentUpdate }) {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleMouseEnterLikes = async (replyId = null, event) => {
+    const targetId = replyId || comment.id;
+    const likesCount = replyId
+      ? comment.replies?.find(r => r.id === replyId)?.likes_count || 0
+      : comment.likes_count;
+
+    if (likesCount === 0) return;
+
+    // Calculate tooltip position
+    if (event) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      setTooltipPosition({
+        top: rect.top - 8,
+        left: rect.left,
+      });
+    }
+
+    if (likers.length > 0 && activeReplyId === replyId) {
+      setShowLikesTooltip(true);
+      return;
+    }
+
+    setActiveReplyId(replyId);
+    setIsLoadingLikers(true);
+    try {
+      const res = await postService.getCommentLikes(targetId);
+      setLikers(res.data);
+      setShowLikesTooltip(true);
+    } catch (err) {
+      console.error('Failed to fetch likers:', err);
+    } finally {
+      setIsLoadingLikers(false);
+    }
+  };
+
+  const handleMouseLeaveLikes = () => {
+    setShowLikesTooltip(false);
+    setActiveReplyId(null);
   };
 
   return (
@@ -95,7 +143,12 @@ export default function CommentCard({ comment, onCommentUpdate }) {
           <span>{new Date(comment.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
 
           {comment.recent_likes && comment.recent_likes.length > 0 && (
-            <div className={styles.likeAvatars}>
+            <div
+              className={styles.likeAvatars}
+              onMouseEnter={(e) => handleMouseEnterLikes(null, e)}
+              onMouseLeave={handleMouseLeaveLikes}
+              style={{ position: 'relative' }}
+            >
               <div style={{ display: 'flex' }}>
                 {comment.recent_likes.map((liker, idx) => (
                   <img
@@ -111,6 +164,25 @@ export default function CommentCard({ comment, onCommentUpdate }) {
                 ))}
               </div>
               <span>{comment.likes_count}</span>
+
+              {showLikesTooltip && activeReplyId === null && (
+                <div className={styles.likesTooltip} style={{ top: tooltipPosition.top, left: tooltipPosition.left }}>
+                  {isLoadingLikers ? (
+                    <div className={styles.tooltipLoading}>Loading...</div>
+                  ) : likers.length > 0 ? (
+                    <div className={styles.tooltipList}>
+                      {likers.map((liker) => (
+                        <div key={liker.id} className={styles.tooltipItem}>
+                          <img src={liker.avatar} alt={liker.name} />
+                          <span>{liker.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className={styles.tooltipEmpty}>No likes yet</div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -175,6 +247,10 @@ export default function CommentCard({ comment, onCommentUpdate }) {
                             likes_count: prevLiked ? prevCount - 1 : prevCount + 1
                           } : r)
                         });
+
+                        // Clear likers cache to force refetch on next hover
+                        setLikers([]);
+
                         try {
                           const res = await postService.likeComment(reply.id);
                           onCommentUpdate(comment.id, {
@@ -197,7 +273,12 @@ export default function CommentCard({ comment, onCommentUpdate }) {
                     <span>{new Date(reply.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
 
                     {reply.recent_likes && reply.recent_likes.length > 0 && (
-                      <div className={styles.likeAvatars}>
+                      <div
+                        className={styles.likeAvatars}
+                        onMouseEnter={(e) => handleMouseEnterLikes(reply.id, e)}
+                        onMouseLeave={handleMouseLeaveLikes}
+                        style={{ position: 'relative' }}
+                      >
                         <div style={{ display: 'flex' }}>
                           {reply.recent_likes.map((liker, idx) => (
                             <img
@@ -214,6 +295,25 @@ export default function CommentCard({ comment, onCommentUpdate }) {
                           ))}
                         </div>
                         <span className={styles.reply}>{reply.likes_count}</span>
+
+                        {showLikesTooltip && activeReplyId === reply.id && (
+                          <div className={styles.likesTooltip} style={{ top: tooltipPosition.top, left: tooltipPosition.left }}>
+                            {isLoadingLikers ? (
+                              <div className={styles.tooltipLoading}>Loading...</div>
+                            ) : likers.length > 0 ? (
+                              <div className={styles.tooltipList}>
+                                {likers.map((liker) => (
+                                  <div key={liker.id} className={styles.tooltipItem}>
+                                    <img src={liker.avatar} alt={liker.name} />
+                                    <span>{liker.name}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className={styles.tooltipEmpty}>No likes yet</div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>

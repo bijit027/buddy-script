@@ -84,10 +84,14 @@ class CommentService
         }
 
         $comment->refresh();
+        $comment->load('likes.user');
 
         return [
             'likes_count' => $comment->likes_count,
             'is_liked_by_me' => $isLiked,
+            'recent_likes' => \App\Http\Resources\UserResource::collection(
+                $comment->likes->sortByDesc('created_at')->take(3)->map->user
+            )->resolve(),
         ];
     }
 
@@ -119,5 +123,12 @@ class CommentService
                 'avatar' => $reply->user->avatar_url,
             ],
         ];
+    }
+
+    public function getLikes(Comment $comment): array
+    {
+        $likes = $comment->likes()->with('user')->latest()->get()->pluck('user');
+
+        return \App\Http\Resources\UserResource::collection($likes)->resolve();
     }
 }

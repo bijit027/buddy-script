@@ -77,6 +77,8 @@ export const postService = {
   likeComment: (id) => api.post(`/comments/${id}/like`),
 
   replyToComment: (id, content) => api.post(`/comments/${id}/reply`, { content }),
+
+  getCommentLikes: (id) => api.get(`/comments/${id}/likes`),
 };
 
 // ─── Profile Service ──────────────────────────────────────────────────────────
