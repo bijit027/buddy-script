@@ -1,0 +1,49 @@
+.errorBanner {
+  color: #e53e3e;
+  font-size: 13px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #fff5f5;
+  border-radius: 6px;
+  border: 1px solid #fed7d7;
+}
+
+.fieldError {
+  color: #e53e3e;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.passwordField {
+  position: relative;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 12px;
+  top: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #888;
+  padding: 0;
+  line-height: 1;
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+}
+
+.submitSpinner {
+  width: 18px;
+  height: 18px;
+  border-width: 2px;
+}

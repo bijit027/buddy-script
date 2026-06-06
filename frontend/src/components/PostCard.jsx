@@ -315,19 +315,21 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
           <div className={`_feed_inner_timeline_total_reacts_image ${styles.reactsImage}`} onClick={fetchLikes}>
             {post.recent_likes && post.recent_likes.length > 0 ? (
               <>
-                {post.recent_likes.map((liker, idx) => (
-                  <img
-                    key={liker.id}
-                    src={liker.avatar}
-                    alt={liker.name}
-                    title={liker.name}
-                    className={`_react_img ${styles.reactImg}`}
-                    style={{
-                      zIndex: post.recent_likes.length - idx,
-                      marginLeft: idx === 0 ? 0 : -16,
-                    }}
-                  />
-                ))}
+                <div className={styles.reactImgStack}>
+                  {post.recent_likes.map((liker, idx) => (
+                    <img
+                      key={liker.id}
+                      src={liker.avatar}
+                      alt={liker.name}
+                      title={liker.name}
+                      className={`_react_img ${styles.reactImg}`}
+                      style={{
+                        '--stack-index': idx,
+                        '--stack-total': post.recent_likes.length,
+                      }}
+                    />
+                  ))}
+                </div>
                 <span className={styles.reactsText}>
                   Liked by <strong>{post.recent_likes[0].id === user?.id ? 'you' : post.recent_likes[0].name}</strong> {post.likes_count > 1 ? `and ${post.likes_count - 1} others` : ''}
                 </span>
@@ -388,7 +390,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
                     className={`_comment_img ${styles.commentBoxContentImage}`}
                   />
                 </div>
-                <div className="_feed_inner_comment_box_content_txt" style={{ flex: 1 }}>
+                <div className={`_feed_inner_comment_box_content_txt ${styles.commentBoxContentTxt}`}>
                   <textarea
                     className={`form-control _comment_textarea ${styles.commentTextarea}`}
                     placeholder="Write a comment..."

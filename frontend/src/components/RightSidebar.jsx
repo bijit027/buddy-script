@@ -1,3 +1,5 @@
+import styles from '../../public/assets/css/RightSidebar.module.css';
+
 const TRENDING = [
   { tag: '#ReactJS', posts: '24.5K posts' },
   { tag: '#WebDev', posts: '18.2K posts' },
@@ -15,9 +17,9 @@ export default function RightSidebar() {
         </div>
         <hr className="_underline" />
         {TRENDING.map(({ tag, posts }) => (
-          <div key={tag} className="_right_inner_area_info_ppl" style={{ marginBottom: 16 }}>
-            <div className="_right_inner_area_info_box" style={{ width: '100%' }}>
-              <div className="_right_inner_area_info_box_txt" style={{ paddingLeft: 0 }}>
+          <div key={tag} className={`_right_inner_area_info_ppl ${styles.trendItem}`}>
+            <div className={`_right_inner_area_info_box ${styles.trendBox}`}>
+              <div className={`_right_inner_area_info_box_txt ${styles.trendText}`}>
                 <h4 className="_right_inner_area_info_box_title">{tag}</h4>
                 <p className="_right_inner_area_info_box_para">{posts}</p>
               </div>

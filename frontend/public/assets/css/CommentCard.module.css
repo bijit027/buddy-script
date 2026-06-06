@@ -144,24 +144,35 @@
 }
 
 .likeAvatars {
+  position: relative;
   display: flex;
   align-items: center;
   margin-left: auto;
   padding-right: 16px;
 }
 
-.likeAvatars img {
+.likeAvatarRow {
+  display: flex;
+  align-items: center;
+}
+
+.likeAvatarImg {
   width: 16px;
   height: 16px;
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid #fff;
   position: relative;
+  z-index: calc(var(--stack-total, 1) - var(--stack-index, 0));
 }
 
-.likeAvatars img.reply {
+.likeAvatarImgSmall {
   width: 14px;
   height: 14px;
+}
+
+.likeAvatarImg:not(:first-child) {
+  margin-left: -6px;
 }
 
 .likeAvatars span {
@@ -175,6 +186,8 @@
 
 .likesTooltip {
   position: fixed;
+  top: var(--tooltip-top);
+  left: var(--tooltip-left);
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import styles from '../../public/assets/css/Auth.module.css';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ export default function Register() {
 
   const FieldError = ({ field }) =>
     errors[field] ? (
-      <p style={{ color: '#e53e3e', fontSize: 12, marginTop: 4 }}>{errors[field]}</p>
+      <p className={styles.fieldError}>{errors[field]}</p>
     ) : null;
 
   return (
@@ -109,7 +110,7 @@ export default function Register() {
                 <h4 className="_social_registration_content_title _titl4 _mar_b50">Registration</h4>
 
                 {errors.general && (
-                  <div style={{ color: '#e53e3e', fontSize: 13, marginBottom: 12, padding: '8px 12px', background: '#fff5f5', borderRadius: 6, border: '1px solid #fed7d7' }}>
+                  <div className={styles.errorBanner}>
                     {errors.general}
                   </div>
                 )}
@@ -226,11 +227,10 @@ export default function Register() {
                         <button
                           id="register_submit_btn"
                           type="submit"
-                          className="_social_registration_form_btn_link _btn1"
+                          className={`_social_registration_form_btn_link _btn1 ${styles.submitButton}`}
                           disabled={isLoading}
-                          style={{ opacity: isLoading ? 0.7 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
                         >
-                          {isLoading && <span className="_spinner" style={{ width: 18, height: 18, borderWidth: 2 }} />}
+                          {isLoading && <span className={`_spinner ${styles.submitSpinner}`} />}
                           {isLoading ? 'Creating account...' : 'Create Account'}
                         </button>
                       </div>

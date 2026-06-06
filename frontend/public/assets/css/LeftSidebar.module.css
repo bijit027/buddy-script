@@ -1,0 +1,10 @@
+.exploreLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.exploreIcon {
+  font-size: 20px;
+  line-height: 1;
+}

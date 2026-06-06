@@ -75,9 +75,8 @@ export default function PostVisibilityPicker({ value, onChange, disabled = false
 
     const rect = triggerRef.current.getBoundingClientRect();
     setMenuStyle({
-      top: rect.bottom + 6,
-      left: rect.left,
-      width: 280,
+      '--menu-top': `${rect.bottom + 6}px`,
+      '--menu-left': `${rect.left}px`,
     });
   };
 

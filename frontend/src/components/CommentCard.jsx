@@ -147,18 +147,18 @@ export default function CommentCard({ comment, onCommentUpdate }) {
               className={styles.likeAvatars}
               onMouseEnter={(e) => handleMouseEnterLikes(null, e)}
               onMouseLeave={handleMouseLeaveLikes}
-              style={{ position: 'relative' }}
             >
-              <div style={{ display: 'flex' }}>
+              <div className={styles.likeAvatarRow}>
                 {comment.recent_likes.map((liker, idx) => (
                   <img
                     key={liker.id}
                     src={liker.avatar}
                     title={liker.name}
                     alt={liker.name}
+                    className={styles.likeAvatarImg}
                     style={{
-                      marginLeft: idx === 0 ? 0 : -6,
-                      zIndex: 9 - idx
+                      '--stack-index': idx,
+                      '--stack-total': comment.recent_likes.length,
                     }}
                   />
                 ))}
@@ -166,7 +166,13 @@ export default function CommentCard({ comment, onCommentUpdate }) {
               <span>{comment.likes_count}</span>
 
               {showLikesTooltip && activeReplyId === null && (
-                <div className={styles.likesTooltip} style={{ top: tooltipPosition.top, left: tooltipPosition.left }}>
+                <div
+                  className={styles.likesTooltip}
+                  style={{
+                    '--tooltip-top': `${tooltipPosition.top}px`,
+                    '--tooltip-left': `${tooltipPosition.left}px`,
+                  }}
+                >
                   {isLoadingLikers ? (
                     <div className={styles.tooltipLoading}>Loading...</div>
                   ) : likers.length > 0 ? (
@@ -277,19 +283,18 @@ export default function CommentCard({ comment, onCommentUpdate }) {
                         className={styles.likeAvatars}
                         onMouseEnter={(e) => handleMouseEnterLikes(reply.id, e)}
                         onMouseLeave={handleMouseLeaveLikes}
-                        style={{ position: 'relative' }}
                       >
-                        <div style={{ display: 'flex' }}>
+                        <div className={styles.likeAvatarRow}>
                           {reply.recent_likes.map((liker, idx) => (
                             <img
                               key={liker.id}
                               src={liker.avatar}
                               title={liker.name}
                               alt={liker.name}
-                              className={styles.reply}
+                              className={`${styles.likeAvatarImg} ${styles.likeAvatarImgSmall}`}
                               style={{
-                                marginLeft: idx === 0 ? 0 : -6,
-                                zIndex: 9 - idx
+                                '--stack-index': idx,
+                                '--stack-total': reply.recent_likes.length,
                               }}
                             />
                           ))}
@@ -297,7 +302,13 @@ export default function CommentCard({ comment, onCommentUpdate }) {
                         <span className={styles.reply}>{reply.likes_count}</span>
 
                         {showLikesTooltip && activeReplyId === reply.id && (
-                          <div className={styles.likesTooltip} style={{ top: tooltipPosition.top, left: tooltipPosition.left }}>
+                          <div
+                            className={styles.likesTooltip}
+                            style={{
+                              '--tooltip-top': `${tooltipPosition.top}px`,
+                              '--tooltip-left': `${tooltipPosition.left}px`,
+                            }}
+                          >
                             {isLoadingLikers ? (
                               <div className={styles.tooltipLoading}>Loading...</div>
                             ) : likers.length > 0 ? (

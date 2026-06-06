@@ -80,6 +80,8 @@
 
 .menu {
   position: fixed;
+  top: var(--menu-top);
+  left: var(--menu-left);
   z-index: 9999;
   width: 280px;
   padding: 10px;

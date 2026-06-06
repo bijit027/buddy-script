@@ -1,3 +1,30 @@
+.feedList {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.feedLoading {
+  text-align: center;
+  padding: 40px;
+}
+
+.feedLoadingSpinner {
+  display: inline-block;
+}
+
+.feedError {
+  text-align: center;
+  color: #e53e3e;
+  padding: 40px;
+}
+
+.loadMoreTrigger {
+  text-align: center;
+  padding: 20px;
+}
+
 .feedSpinner {
   width: 24px;
   height: 24px;

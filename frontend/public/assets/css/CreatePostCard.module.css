@@ -2,6 +2,17 @@
   overflow: visible;
 }
 
+.userAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
 .createPostPreview {
   position: relative;
   margin-top: 16px;

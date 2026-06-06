@@ -162,13 +162,13 @@ export default function Feed() {
                     <CreatePostCard onPostCreated={handlePostCreated} />
 
                     {/* Feed List */}
-                    <div className="_feed_list" style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 24 }}>
+                    <div className={`_feed_list ${styles.feedList}`}>
                       {status === 'loading' ? (
-                        <div style={{ textAlign: 'center', padding: 40 }}>
-                          <span className="_spinner" style={{ display: 'inline-block' }} />
+                        <div className={styles.feedLoading}>
+                          <span className={`_spinner ${styles.feedLoadingSpinner}`} />
                         </div>
                       ) : status === 'error' ? (
-                        <div style={{ textAlign: 'center', color: '#e53e3e', padding: 40 }}>
+                        <div className={styles.feedError}>
                           Failed to load feed. Please try again later.
                         </div>
                       ) : (
@@ -186,8 +186,7 @@ export default function Feed() {
                             ))
                           )}
 
-                          {/* Loading indicator for next page */}
-                          <div ref={ref} style={{ textAlign: 'center', padding: 20 }}>
+                          <div ref={ref} className={styles.loadMoreTrigger}>
                             {isFetchingNextPage ? (
                               <span className={styles.feedSpinner} />
                             ) : hasNextPage ? (

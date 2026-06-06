@@ -70,11 +70,10 @@ export default function CreatePostCard({ onPostCreated }) {
       <form onSubmit={handleSubmit}>
         <div className="_feed_inner_text_area_box">
           <div className="_feed_inner_text_area_box_image">
-            <img 
-              src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff`} 
-              alt={user?.name} 
-              className="_txt_img" 
-              style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover' }}
+            <img
+              src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff`}
+              alt={user?.name}
+              className={`_txt_img ${styles.userAvatar}`}
             />
           </div>
           <div className="form-floating _feed_inner_text_area_box_form ">
@@ -120,7 +119,7 @@ export default function CreatePostCard({ onPostCreated }) {
                 </span>
                 Photo
               </button>
-              <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/gif" onChange={handleImageChange} style={{ display: 'none' }} id="post_image_input" />
+              <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/gif" onChange={handleImageChange} className={styles.hiddenFileInput} id="post_image_input" />
             </div>
             
           </div>
