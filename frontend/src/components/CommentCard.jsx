@@ -126,20 +126,36 @@ export default function CommentCard({ comment, onCommentUpdate }) {
 
         {/* Reply Form */}
         {showReplyForm && (
-          <form onSubmit={handleReply} style={{ display: 'flex', gap: 8, marginBottom: 16, marginTop: 8 }}>
-            <img 
-              src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff`} 
-              alt={user?.name} 
-              style={{ width: 28, height: 28, borderRadius: '50%' }} 
+          <form onSubmit={handleReply} style={{ display: 'flex', gap: 8, marginBottom: 16, marginTop: 8, alignItems: 'center' }}>
+            <img
+              src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff`}
+              alt={user?.name}
+              style={{ width: 28, height: 28, borderRadius: '50%' }}
             />
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
               placeholder="Write a reply..."
               disabled={isSubmitting}
               style={{ flex: 1, padding: '6px 12px', borderRadius: 20, border: '1px solid #ccd0d5', fontSize: 13, background: '#f0f2f5', outline: 'none' }}
             />
+            <button
+              type="submit"
+              disabled={isSubmitting || !replyContent.trim()}
+              style={{
+                background: isSubmitting || !replyContent.trim() ? '#ccc' : '#1877f2',
+                color: '#fff',
+                border: 'none',
+                padding: '6px 16px',
+                borderRadius: 20,
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: isSubmitting || !replyContent.trim() ? 'not-allowed' : 'pointer'
+              }}
+            >
+              {isSubmitting ? '...' : 'Reply'}
+            </button>
           </form>
         )}
 
@@ -147,14 +163,14 @@ export default function CommentCard({ comment, onCommentUpdate }) {
         {comment.replies && comment.replies.length > 0 && (
           <div className="_replies_list" style={{ marginTop: 8 }}>
             {comment.replies.map((reply) => (
-              <div key={reply.id} className="_comment_main" style={{ marginBottom: 12 }}>
+              <div key={reply.id} className="_comment_main" style={{ marginBottom: 12, borderRadius: 8 }}>
                 <div className="_comment_image">
                   <a href="#0" className="_comment_image_link">
-                    <img src={reply.user.avatar} alt={reply.user.name} className="_comment_img1" style={{ width: 28, height: 28 }} />
+                    <img src={reply.user.avatar} alt={reply.user.name} className="_comment_img1" style={{ borderRadius: '50%', objectFit: 'cover' }} />
                   </a>
                 </div>
                 <div className="_comment_area" style={{ width: '100%' }}>
-                  <div className="_comment_details" style={{ marginBottom: 4, borderRadius: 16 }}>
+                  <div className="_comment_details" style={{ marginBottom: 4, borderRadius: 16, background: '#f0f2f5', padding: '8px 12px' }}>
                     <div className="_comment_details_top">
                       <div className="_comment_name">
                         <a href="#0">
