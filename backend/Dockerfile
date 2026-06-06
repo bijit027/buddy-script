@@ -11,7 +11,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
+RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts
 
 COPY . .
 RUN composer dump-autoload --optimize
@@ -25,6 +25,6 @@ CMD php artisan config:clear \
     && php artisan cache:clear \
     && php artisan route:clear \
     && php artisan view:clear \
-    && php artisan migrate --force \
     && php artisan storage:link --force \
-    && php artisan serve --host=0.0.0.0 --port=${PORT:-8080} --docroot=public
+    && php artisan migrate --force \
+    && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
