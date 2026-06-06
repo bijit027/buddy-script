@@ -300,11 +300,11 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
             </div>
           </div>
         ) : (
-          <h4 className="_feed_inner_timeline_post_title" style={{ fontWeight: 'normal', fontSize: 16 }}>{post.content}</h4>
+          <h4 className={`_feed_inner_timeline_post_title ${styles.postContent}`}>{post.content}</h4>
         )}
 
         {post.image && (
-          <div className="_feed_inner_timeline_image" style={{ marginTop: 16 }}>
+          <div className={`_feed_inner_timeline_image ${styles.postImageContainer}`}>
             <img src={post.image} alt="Post" className={`_time_img ${styles.postImageDisplay}`} />
           </div>
         )}
@@ -333,13 +333,13 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
                 </span>
               </>
             ) : (
-              <p className="_feed_inner_timeline_total_reacts_para" style={{ marginLeft: 0 }}>{post.likes_count}</p>
+              <p className={`_feed_inner_timeline_total_reacts_para ${styles.likesCountPara}`}>{post.likes_count}</p>
             )}
           </div>
         ) : null}
-        <div className={`_feed_inner_timeline_total_reacts_txt ${post.likes_count === 0 ? styles.empty : ''}`}>
+        <div className={`_feed_inner_timeline_total_reacts_txt ${styles.commentSection}`}>
           <p className="_feed_inner_timeline_total_reacts_para1">
-            <a href="#0" onClick={(e) => { e.preventDefault(); handleToggleComments(); }}><span>{post.comments_count}</span> Comment{post.comments_count !== 1 ? 's' : ''}</a>
+            <a href="#0" onClick={(e) => { e.preventDefault(); handleToggleComments(); }}><span>{post.comments_count || 0}</span> Comment{(post.comments_count || 0) !== 1 ? 's' : ''}</a>
           </p>
         </div>
       </div>
@@ -395,7 +395,6 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     disabled={isSubmittingComment}
-                    style={{ height: 44, paddingTop: 10 }}
                   ></textarea>
                 </div>
               </div>
@@ -413,9 +412,9 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
 
           <div className={`_timline_comment_main ${styles.timelineCommentMain}`}>
             {isLoadingComments ? (
-              <div style={{ textAlign: 'center', padding: 20 }}><span className={styles.spinner} /></div>
+              <div className={styles.loadingIndicator}><span className={styles.spinner} /></div>
             ) : comments.length === 0 ? (
-              <p style={{ textAlign: 'center', color: '#65676b', fontSize: 14 }}>No comments yet.</p>
+              <p className={styles.loadingText}>No comments yet.</p>
             ) : (
               comments.map((comment) => (
                 <CommentCard
@@ -460,9 +459,9 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
             </div>
             <div className={styles.likesModalBody}>
               {isLoadingLikes ? (
-                <div style={{ textAlign: 'center', padding: 20, color: '#65676b' }}>Loading...</div>
+                <div className={styles.loadingText}>Loading...</div>
               ) : fullLikesList.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: 20, color: '#65676b' }}>No likes yet.</div>
+                <div className={styles.loadingText}>No likes yet.</div>
               ) : (
                 <div className={styles.likesModalList}>
                   {fullLikesList.map(liker => (

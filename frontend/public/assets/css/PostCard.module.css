@@ -164,6 +164,43 @@
 
 .reactsSection {
   margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.commentSection {
+  margin-left: auto;
+}
+
+.postContent {
+  font-weight: normal;
+  font-size: 16px;
+}
+
+.postImageContainer {
+  margin-top: 16px;
+}
+
+.likesCountPara {
+  margin-left: 0;
+}
+
+.commentTextarea {
+  height: 44px;
+  padding-top: 10px;
+}
+
+.loadingIndicator {
+  text-align: center;
+  padding: 20px;
+}
+
+.loadingText {
+  text-align: center;
+  padding: 20px;
+  color: #65676b;
+  font-size: 14px;
 }
 
 .reactsImage {
