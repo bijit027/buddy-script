@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService
@@ -31,12 +30,12 @@ class AuthService
 
     public function login(LoginRequest $request): array
     {
-        if (! Auth::attempt($request->only('email', 'password'))) {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
             throw new \Illuminate\Auth\AuthenticationException('Invalid email or password.');
         }
 
-        /** @var User $user */
-        $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return [
