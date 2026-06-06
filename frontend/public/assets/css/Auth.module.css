@@ -50,7 +50,8 @@
 .passwordToggle {
   position: absolute;
   right: 12px;
-  top: 36px;
+  top: 70%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
@@ -58,6 +59,9 @@
   color: #888;
   padding: 0;
   line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .submitButton {
