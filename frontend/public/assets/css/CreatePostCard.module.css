@@ -1,3 +1,7 @@
+.createPostCard {
+  overflow: visible;
+}
+
 .createPostPreview {
   position: relative;
   margin-top: 16px;
@@ -39,6 +43,16 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+}
+
+.bottomBar {
+  overflow: visible !important;
+  height: auto !important;
+  min-height: 64px;
+  align-items: center;
 }
 
 .postButton {
@@ -48,29 +62,43 @@
   gap: 8px;
   height: 40px;
   min-height: 40px;
-  padding: 0 14px !important;
-  border-radius: 8px !important;
+  max-height: 40px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: #1877f2;
+  font-family: inherit;
   font-size: 14px;
   font-weight: 500;
   line-height: 1;
+  color: #fff;
+  cursor: pointer;
+  box-sizing: border-box;
   opacity: 1;
   transition: opacity 0.2s ease, background 0.15s ease;
 }
 
+.postButton:hover:not(:disabled) {
+  background: #166fe5;
+}
+
 .postButton span {
-  font-size: 14px !important;
-  line-height: 1 !important;
+  font-size: 14px;
+  line-height: 1;
+  color: #fff;
 }
 
 .postButton svg {
-  margin: 0 !important;
+  margin: 0;
   width: 14px;
   height: 14px;
   flex-shrink: 0;
 }
 
-.postButton.disabled {
+.postButton.disabled,
+.postButton:disabled {
   opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .spinner {

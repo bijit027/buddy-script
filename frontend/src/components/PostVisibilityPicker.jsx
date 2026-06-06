@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import styles from '../../public/assets/css/PostVisibilityPicker.module.css';
 
 const OPTIONS = [
@@ -62,29 +63,100 @@ function CheckIcon() {
 
 export default function PostVisibilityPicker({ value, onChange, disabled = false }) {
   const [open, setOpen] = useState(false);
+  const [menuStyle, setMenuStyle] = useState({});
   const wrapperRef = useRef(null);
+  const triggerRef = useRef(null);
+  const menuRef = useRef(null);
   const selected = OPTIONS.find((option) => option.value === value) ?? OPTIONS[0];
   const SelectedIcon = selected.Icon;
 
+  const updateMenuPosition = () => {
+    if (!triggerRef.current) return;
+
+    const rect = triggerRef.current.getBoundingClientRect();
+    setMenuStyle({
+      top: rect.bottom + 6,
+      left: rect.left,
+      width: 280,
+    });
+  };
+
   useEffect(() => {
+    if (!open) return undefined;
+
+    updateMenuPosition();
+
     const handleClickOutside = (event) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      const target = event.target;
+      const insideTrigger = wrapperRef.current?.contains(target);
+      const insideMenu = menuRef.current?.contains(target);
+
+      if (!insideTrigger && !insideMenu) {
         setOpen(false);
       }
     };
 
+    const handleReposition = () => updateMenuPosition();
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    window.addEventListener('resize', handleReposition);
+    window.addEventListener('scroll', handleReposition, true);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('resize', handleReposition);
+      window.removeEventListener('scroll', handleReposition, true);
+    };
+  }, [open]);
 
   const handleSelect = (nextValue) => {
     onChange(nextValue);
     setOpen(false);
   };
 
+  const menu = open ? (
+    <div
+      ref={menuRef}
+      className={styles.menu}
+      role="listbox"
+      aria-label="Choose post visibility"
+      style={menuStyle}
+    >
+      {OPTIONS.map((option) => {
+        const OptionIcon = option.Icon;
+        const isSelected = option.value === value;
+
+        return (
+          <button
+            key={option.label}
+            type="button"
+            role="option"
+            aria-selected={isSelected}
+            className={`${styles.option} ${isSelected ? styles.optionSelected : ''}`}
+            onClick={() => handleSelect(option.value)}
+          >
+            <span className={styles.optionIcon}>
+              <OptionIcon />
+            </span>
+            <span className={styles.optionText}>
+              <span className={styles.optionLabel}>{option.label}</span>
+              <span className={styles.optionHint}>{option.hint}</span>
+            </span>
+            {isSelected && (
+              <span className={styles.check}>
+                <CheckIcon />
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  ) : null;
+
   return (
-    <div className={styles.wrapper} ref={wrapperRef}>
+    <div className={`${styles.wrapper} ${open ? styles.wrapperOpen : ''}`} ref={wrapperRef}>
       <button
+        ref={triggerRef}
         type="button"
         className={`${styles.trigger} ${open ? styles.triggerOpen : ''}`}
         onClick={() => setOpen((prev) => !prev)}
@@ -96,44 +168,13 @@ export default function PostVisibilityPicker({ value, onChange, disabled = false
         <span className={`${styles.icon} ${!value ? styles.iconPrivate : ''}`}>
           <SelectedIcon />
         </span>
-        <span>{selected.label}</span>
+        <span className={styles.label}>{selected.label}</span>
         <span className={`${styles.chevron} ${open ? styles.chevronOpen : ''}`}>
           <ChevronIcon />
         </span>
       </button>
 
-      {open && (
-        <div className={styles.menu} role="listbox" aria-label="Choose post visibility">
-          {OPTIONS.map((option) => {
-            const OptionIcon = option.Icon;
-            const isSelected = option.value === value;
-
-            return (
-              <button
-                key={option.label}
-                type="button"
-                role="option"
-                aria-selected={isSelected}
-                className={`${styles.option} ${isSelected ? styles.optionSelected : ''}`}
-                onClick={() => handleSelect(option.value)}
-              >
-                <span className={styles.optionIcon}>
-                  <OptionIcon />
-                </span>
-                <span className={styles.optionText}>
-                  <span className={styles.optionLabel}>{option.label}</span>
-                  <span className={styles.optionHint}>{option.hint}</span>
-                </span>
-                {isSelected && (
-                  <span className={styles.check}>
-                    <CheckIcon />
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      )}
+      {menu && createPortal(menu, document.body)}
     </div>
   );
 }

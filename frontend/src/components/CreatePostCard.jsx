@@ -66,7 +66,7 @@ export default function CreatePostCard({ onPostCreated }) {
   };
 
   return (
-    <div className="_feed_inner_text_area _b_radious6 _padd_b24 _padd_t24 _padd_r24 _padd_l24 _mar_b16">
+    <div className={`_feed_inner_text_area _b_radious6 _padd_b24 _padd_t24 _padd_r24 _padd_l24 _mar_b16 ${styles.createPostCard}`}>
       <form onSubmit={handleSubmit}>
         <div className="_feed_inner_text_area_box">
           <div className="_feed_inner_text_area_box_image">
@@ -104,7 +104,7 @@ export default function CreatePostCard({ onPostCreated }) {
           </div>
         )}
 
-        <div className="_feed_inner_text_area_bottom">
+        <div className={`_feed_inner_text_area_bottom ${styles.bottomBar}`}>
           <div className="_feed_inner_text_area_item">
             <div className="_feed_inner_text_area_bottom_photo _feed_common">
               <button 
@@ -133,7 +133,7 @@ export default function CreatePostCard({ onPostCreated }) {
             />
             <button
               type="submit"
-              className={`_feed_inner_text_area_btn_link ${styles.postButton} ${isLoading || (!content.trim() && !image) ? styles.disabled : ''}`}
+              className={`${styles.postButton} ${isLoading || (!content.trim() && !image) ? styles.disabled : ''}`}
               disabled={isLoading || (!content.trim() && !image)}
             >
               {isLoading ? (
