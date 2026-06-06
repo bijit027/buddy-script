@@ -21,17 +21,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/posts', [PostController::class, 'store'])
         ->middleware('throttle:5,1');
-    Route::put('/posts/{id}', [PostController::class, 'update']);
-    Route::delete('/posts/{id}', [PostController::class, 'destroy']);
-    Route::post('/posts/{id}/like', [PostController::class, 'like'])
+    Route::put('/posts/{post}', [PostController::class, 'update']);
+    Route::delete('/posts/{post}', [PostController::class, 'destroy']);
+    Route::post('/posts/{post}/like', [PostController::class, 'like'])
         ->middleware('throttle:5,1');
-    Route::get('/posts/{id}/likes', [PostController::class, 'getLikes']);
-    Route::get('/posts/{id}/comments', [PostController::class, 'getComments']);
-    Route::post('/posts/{id}/comments', [PostController::class, 'addComment'])
+    Route::get('/posts/{post}/likes', [PostController::class, 'getLikes']);
+    Route::get('/posts/{post}/comments', [PostController::class, 'getComments']);
+    Route::post('/posts/{post}/comments', [PostController::class, 'addComment'])
         ->middleware('throttle:5,1');
     // Comments
-    Route::post('/comments/{id}/like', [CommentController::class, 'like']);
-    Route::post('/comments/{id}/reply', [CommentController::class, 'reply']);
+    Route::post('/comments/{comment}/like', [CommentController::class, 'like']);
+    Route::post('/comments/{comment}/reply', [CommentController::class, 'reply']);
 
     // Profile
     Route::put('/profile', [ProfileController::class, 'update']);
