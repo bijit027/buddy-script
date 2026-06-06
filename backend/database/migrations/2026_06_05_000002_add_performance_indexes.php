@@ -12,8 +12,6 @@ return new class extends Migration
             $table->index('is_public');
             $table->index('created_at');
             // user_id is often indexed automatically by foreignId()->constrained(), but let's be explicit
-            // SQLite might throw an error if an index with the same columns exists implicitly,
-            // but Laravel's index() creates a named index, which is usually fine.
         });
 
         Schema::table('comments', function (Blueprint $table) {
