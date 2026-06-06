@@ -27,7 +27,6 @@
 
 .commentDetails.reply {
   border-radius: 16px;
-  background: #f0f2f5;
   padding: 8px 12px;
 }
 
@@ -91,6 +90,18 @@
   opacity: 0.6;
 }
 
+:global(._dark_wrapper) .commentActions button {
+  color: #a0a0a0;
+}
+
+:global(._dark_wrapper) .commentActions button:hover {
+  color: #1877f2;
+}
+
+:global(._dark_wrapper) .commentActions button.liked {
+  color: #1877f2;
+}
+
 .repliesList {
   margin-top: 8px;
 }
@@ -120,6 +131,17 @@
 }
 
 .replyForm input:focus {
+  border-color: #1877f2;
+}
+
+:global(._dark_wrapper) .replyForm input {
+  background: #3a3a3a;
+  border-color: #555;
+  color: #e5e5e5;
+}
+
+:global(._dark_wrapper) .replyForm input:focus {
+  background: #4a4a4a;
   border-color: #1877f2;
 }
 

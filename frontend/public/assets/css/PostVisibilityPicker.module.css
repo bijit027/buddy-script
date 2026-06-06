@@ -168,3 +168,75 @@
   color: #1877f2;
   flex-shrink: 0;
 }
+
+:global(._dark_wrapper) .trigger {
+  color: #e5e5e5;
+  background: #2a2a2a;
+  border-color: #444;
+}
+
+:global(._dark_wrapper) .trigger:hover:not(:disabled) {
+  background: #3a3a3a;
+  border-color: #555;
+}
+
+:global(._dark_wrapper) .triggerOpen {
+  background: #3a3a3a;
+  border-color: #1877f2;
+}
+
+:global(._dark_wrapper) .icon {
+  color: #a0a0a0;
+}
+
+:global(._dark_wrapper) .iconPrivate {
+  color: #fbbf24;
+}
+
+:global(._dark_wrapper) .chevron {
+  color: #a0a0a0;
+}
+
+:global(._dark_wrapper) .menu {
+  background: #2a2a2a;
+  border-color: #444;
+}
+
+:global(._dark_wrapper) .option {
+  background: #2a2a2a;
+  color: #e5e5e5;
+}
+
+:global(._dark_wrapper) .option:hover {
+  background: #3a3a3a;
+}
+
+:global(._dark_wrapper) .optionSelected {
+  background: #1e3a5f;
+}
+
+:global(._dark_wrapper) .optionSelected:hover {
+  background: #254060;
+}
+
+:global(._dark_wrapper) .optionIcon {
+  background: #3a3a3a;
+  color: #e5e5e5;
+}
+
+:global(._dark_wrapper) .optionSelected .optionIcon {
+  background: #1877f2;
+  color: #fff;
+}
+
+:global(._dark_wrapper) .optionLabel {
+  color: #e5e5e5;
+}
+
+:global(._dark_wrapper) .optionHint {
+  color: #a0a0a0;
+}
+
+:global(._dark_wrapper) .check {
+  color: #1877f2;
+}

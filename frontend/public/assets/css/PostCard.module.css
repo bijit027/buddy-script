@@ -243,6 +243,10 @@
   margin-left: auto;
 }
 
+:global(._dark_wrapper) .reactsText {
+  color: #e5e5e5;
+}
+
 .reactionButton {
   background: none;
   border: none;
@@ -266,6 +270,18 @@
 .reactionButton:disabled {
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+:global(._dark_wrapper) .reactionButton {
+  color: #a0a0a0;
+}
+
+:global(._dark_wrapper) .reactionButton:hover {
+  color: #1877f2;
+}
+
+:global(._dark_wrapper) .reactionButton.active {
+  color: #1877f2;
 }
 
 .commentSection {
@@ -306,6 +322,15 @@
 
 .commentTextarea:focus {
   background: #e4e6eb;
+}
+
+:global(._dark_wrapper) .commentTextarea {
+  background: #3a3a3a;
+  color: #e5e5e5;
+}
+
+:global(._dark_wrapper) .commentTextarea:focus {
+  background: #4a4a4a;
 }
 
 .commentBoxIcon {
