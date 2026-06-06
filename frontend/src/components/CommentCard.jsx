@@ -2,6 +2,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { postService } from '../services/api';
+import styles from '../../public/assets/css/CommentCard.module.css';
 
 export default function CommentCard({ comment, onCommentUpdate }) {
   const { user } = useAuth();
@@ -55,82 +56,71 @@ export default function CommentCard({ comment, onCommentUpdate }) {
   };
 
   return (
-    <div className="_comment_main" style={{ marginBottom: 16 }}>
+    <div className={`_comment_main ${styles.commentMain}`}>
       <div className="_comment_image">
         <a href="#0" className="_comment_image_link">
-          <img src={comment.user.avatar} alt={comment.user.name} className="_comment_img1" />
+          <img src={comment.user.avatar} alt={comment.user.name} className={`_comment_img1 ${styles.commentImage}`} />
         </a>
       </div>
-      <div className="_comment_area" style={{ width: '100%' }}>
-        <div className="_comment_details" style={{ marginBottom: 4 }}>
-          <div className="_comment_details_top">
+      <div className={`_comment_area ${styles.commentArea}`}>
+        <div className={`_comment_details ${styles.commentDetails}`}>
+          <div className={`_comment_details_top ${styles.commentDetailsTop}`}>
             <div className="_comment_name">
               <a href="#0">
-                <h4 className="_comment_name_title">{comment.user.name}</h4>
+                <h4 className={`_comment_name_title ${styles.commentNameTitle}`}>{comment.user.name}</h4>
               </a>
             </div>
           </div>
           <div className="_comment_status">
-            <p className="_comment_status_text"><span>{comment.content}</span></p>
+            <p className={`_comment_status_text ${styles.commentStatusText}`}><span>{comment.content}</span></p>
           </div>
         </div>
 
         {/* Comment Actions */}
-        <div className="_comment_actions" style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#65676b', marginBottom: 12, paddingLeft: 8 }}>
-          <button 
+        <div className={`_comment_actions ${styles.commentActions}`}>
+          <button
             onClick={handleLike}
             disabled={isLiking}
-            style={{ 
-              background: 'none', 
-              border: 'none', 
-              padding: 0, 
-              color: comment.is_liked_by_me ? '#1877f2' : '#65676b',
-              fontWeight: comment.is_liked_by_me ? 600 : 400,
-              cursor: 'pointer'
-            }}
+            className={comment.is_liked_by_me ? styles.liked : ''}
           >
             Like
           </button>
-          
-          <button 
+
+          <button
             onClick={() => setShowReplyForm(!showReplyForm)}
-            style={{ background: 'none', border: 'none', padding: 0, color: '#65676b', cursor: 'pointer', fontWeight: 600 }}
           >
             Reply
           </button>
-          
+
           <span>{new Date(comment.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
 
           {comment.recent_likes && comment.recent_likes.length > 0 && (
-            <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', paddingRight: 16 }}>
+            <div className={styles.likeAvatars}>
               <div style={{ display: 'flex' }}>
                 {comment.recent_likes.map((liker, idx) => (
-                  <img 
-                    key={liker.id} 
-                    src={liker.avatar} 
+                  <img
+                    key={liker.id}
+                    src={liker.avatar}
                     title={liker.name}
                     alt={liker.name}
-                    style={{ 
-                      width: 16, height: 16, borderRadius: '50%', objectFit: 'cover', 
-                      marginLeft: idx === 0 ? 0 : -6, border: '1px solid #fff', position: 'relative', zIndex: 9 - idx
-                    }} 
+                    style={{
+                      marginLeft: idx === 0 ? 0 : -6,
+                      zIndex: 9 - idx
+                    }}
                   />
                 ))}
               </div>
-              <span style={{ marginLeft: 4, fontSize: 12 }}>
-                {comment.likes_count}
-              </span>
+              <span>{comment.likes_count}</span>
             </div>
           )}
         </div>
 
         {/* Reply Form */}
         {showReplyForm && (
-          <form onSubmit={handleReply} style={{ display: 'flex', gap: 8, marginBottom: 16, marginTop: 8, alignItems: 'center' }}>
+          <form onSubmit={handleReply} className={styles.replyForm}>
             <img
               src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff`}
               alt={user?.name}
-              style={{ width: 28, height: 28, borderRadius: '50%' }}
             />
             <input
               type="text"
@@ -138,21 +128,10 @@ export default function CommentCard({ comment, onCommentUpdate }) {
               onChange={(e) => setReplyContent(e.target.value)}
               placeholder="Write a reply..."
               disabled={isSubmitting}
-              style={{ flex: 1, padding: '6px 12px', borderRadius: 20, border: '1px solid #ccd0d5', fontSize: 13, background: '#f0f2f5', outline: 'none' }}
             />
             <button
               type="submit"
               disabled={isSubmitting || !replyContent.trim()}
-              style={{
-                background: isSubmitting || !replyContent.trim() ? '#ccc' : '#1877f2',
-                color: '#fff',
-                border: 'none',
-                padding: '6px 16px',
-                borderRadius: 20,
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: isSubmitting || !replyContent.trim() ? 'not-allowed' : 'pointer'
-              }}
             >
               {isSubmitting ? '...' : 'Reply'}
             </button>
@@ -161,31 +140,31 @@ export default function CommentCard({ comment, onCommentUpdate }) {
 
         {/* Replies List */}
         {comment.replies && comment.replies.length > 0 && (
-          <div className="_replies_list" style={{ marginTop: 8 }}>
+          <div className={`_replies_list ${styles.repliesList}`}>
             {comment.replies.map((reply) => (
-              <div key={reply.id} className="_comment_main" style={{ marginBottom: 12, borderRadius: 8 }}>
+              <div key={reply.id} className={`_comment_main ${styles.commentMain} ${styles.reply}`}>
                 <div className="_comment_image">
                   <a href="#0" className="_comment_image_link">
-                    <img src={reply.user.avatar} alt={reply.user.name} className="_comment_img1" style={{ borderRadius: '50%', objectFit: 'cover' }} />
+                    <img src={reply.user.avatar} alt={reply.user.name} className={`_comment_img1 ${styles.commentImage} ${styles.reply}`} />
                   </a>
                 </div>
-                <div className="_comment_area" style={{ width: '100%' }}>
-                  <div className="_comment_details" style={{ marginBottom: 4, borderRadius: 16, background: '#f0f2f5', padding: '8px 12px' }}>
-                    <div className="_comment_details_top">
+                <div className={`_comment_area ${styles.commentArea}`}>
+                  <div className={`_comment_details ${styles.commentDetails} ${styles.reply}`}>
+                    <div className={`_comment_details_top ${styles.commentDetailsTop}`}>
                       <div className="_comment_name">
                         <a href="#0">
-                          <h4 className="_comment_name_title" style={{ fontSize: 13 }}>{reply.user.name}</h4>
+                          <h4 className={`_comment_name_title ${styles.commentNameTitle} ${styles.reply}`}>{reply.user.name}</h4>
                         </a>
                       </div>
                     </div>
                     <div className="_comment_status">
-                      <p className="_comment_status_text" style={{ fontSize: 14 }}><span>{reply.content}</span></p>
+                      <p className={`_comment_status_text ${styles.commentStatusText} ${styles.reply}`}><span>{reply.content}</span></p>
                     </div>
                   </div>
-                  
+
                   {/* Reply Actions (Like only) */}
-                  <div className="_comment_actions" style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: '#65676b', paddingLeft: 8 }}>
-                    <button 
+                  <div className={`_comment_actions ${styles.commentActions} ${styles.reply}`}>
+                    <button
                       onClick={async () => {
                         const prevLiked = reply.is_liked_by_me;
                         const prevCount = reply.likes_count;
@@ -211,36 +190,30 @@ export default function CommentCard({ comment, onCommentUpdate }) {
                            });
                         }
                       }}
-                      style={{ 
-                        background: 'none', border: 'none', padding: 0, 
-                        color: reply.is_liked_by_me ? '#1877f2' : '#65676b',
-                        fontWeight: reply.is_liked_by_me ? 600 : 400,
-                        cursor: 'pointer' 
-                      }}
+                      className={reply.is_liked_by_me ? styles.liked : ''}
                     >
                       Like
                     </button>
                     <span>{new Date(reply.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
 
                     {reply.recent_likes && reply.recent_likes.length > 0 && (
-                      <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', paddingRight: 16 }}>
+                      <div className={styles.likeAvatars}>
                         <div style={{ display: 'flex' }}>
                           {reply.recent_likes.map((liker, idx) => (
-                            <img 
-                              key={liker.id} 
-                              src={liker.avatar} 
+                            <img
+                              key={liker.id}
+                              src={liker.avatar}
                               title={liker.name}
                               alt={liker.name}
-                              style={{ 
-                                width: 14, height: 14, borderRadius: '50%', objectFit: 'cover', 
-                                marginLeft: idx === 0 ? 0 : -6, border: '1px solid #fff', position: 'relative', zIndex: 9 - idx
-                              }} 
+                              className={styles.reply}
+                              style={{
+                                marginLeft: idx === 0 ? 0 : -6,
+                                zIndex: 9 - idx
+                              }}
                             />
                           ))}
                         </div>
-                        <span style={{ marginLeft: 4, fontSize: 11 }}>
-                          {reply.likes_count}
-                        </span>
+                        <span className={styles.reply}>{reply.likes_count}</span>
                       </div>
                     )}
                   </div>

@@ -1,0 +1,78 @@
+.createPostPreview {
+  position: relative;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.createPostPreview img {
+  max-width: 100%;
+  border-radius: 8px;
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.createPostPreview button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.textarea {
+  height: 60px;
+  transition: height 0.2s ease;
+}
+
+.textarea.expanded {
+  height: 100px;
+}
+
+.visibilitySelect {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid #ccd0d5;
+  background: #e4e6eb;
+  font-size: 13px;
+  font-weight: 500;
+  color: #050505;
+  outline: none;
+  cursor: pointer;
+}
+
+.visibilitySelect:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.postButton {
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.postButton.disabled {
+  opacity: 0.6;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #1877f2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -1,0 +1,422 @@
+.postContainer {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.postContainer.deleting {
+  opacity: 0.5;
+}
+
+.postImage {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: 'cover';
+}
+
+.visibilityBadge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.visibilityBadge.private {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.postActionsTrigger {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.postActionsTrigger:hover {
+  background: #f0f2f5;
+}
+
+.postActionsMenu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-width: 180px;
+  z-index: 100;
+  display: none;
+  margin-top: 4px;
+}
+
+.postActionsMenu.open {
+  display: block;
+}
+
+.postActionsItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  color: #050505;
+  transition: background 0.2s ease;
+}
+
+.postActionsItem:hover {
+  background: #f0f2f5;
+}
+
+.postActionsItem.danger {
+  color: #dc2626;
+}
+
+.postActionsItem.danger:hover {
+  background: #fee2e2;
+}
+
+.postActionsItem:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.postEditForm {
+  margin-top: 12px;
+}
+
+.postEditTextarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccd0d5;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+}
+
+.postEditTextarea:focus {
+  border-color: #1877f2;
+}
+
+.postEditActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  justify-content: flex-end;
+}
+
+.postEditBtn {
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s ease;
+}
+
+.postEditBtn.ghost {
+  background: #f0f2f5;
+  color: #050505;
+}
+
+.postEditBtn.ghost:hover {
+  background: #e4e6eb;
+}
+
+.postEditBtn.primary {
+  background: #1877f2;
+  color: #fff;
+}
+
+.postEditBtn.primary:hover {
+  background: #166fe5;
+}
+
+.postEditBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.postEditBtn.danger {
+  background: #dc2626;
+  color: #fff;
+}
+
+.postEditBtn.danger:hover {
+  background: #b91c1c;
+}
+
+.postImageDisplay {
+  margin-top: 16px;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.reactsSection {
+  margin-top: 16px;
+}
+
+.reactsImage {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.reactImg {
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+.reactsText {
+  margin-left: 0;
+}
+
+.reactsText.empty {
+  margin-left: auto;
+}
+
+.reactionButton {
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #65676b;
+  font-weight: 400;
+  transition: color 0.2s ease;
+}
+
+.reactionButton:hover {
+  color: #1877f2;
+}
+
+.reactionButton.active {
+  color: #1877f2;
+  font-weight: 600;
+}
+
+.reactionButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.commentSection {
+  margin-top: 16px;
+}
+
+.commentBoxForm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.commentBoxContent {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.commentBoxContentImage img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.commentTextarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 20px;
+  border: none;
+  background: #f0f2f5;
+  font-size: 14px;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+}
+
+.commentTextarea:focus {
+  background: #e4e6eb;
+}
+
+.commentBoxIcon {
+  display: flex;
+  align-items: center;
+}
+
+.commentBoxIconBtn {
+  background: none;
+  border: none;
+  padding: 0 8px;
+  color: #1877f2;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.commentBoxIconBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.timelineCommentMain {
+  margin-top: 16px;
+  padding: 0 16px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #1877f2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.confirmModalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirmModal {
+  background: #fff;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+}
+
+.confirmModalHeader {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.confirmModalTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.confirmModalClose {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #65676b;
+  line-height: 1;
+}
+
+.confirmModalBody {
+  padding: 20px;
+}
+
+.confirmModalFooter {
+  padding: 16px 20px;
+  border-top: 1px solid #e5e5e5;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.likesModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.likesModalContent {
+  background: #fff;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.likesModalHeader {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.likesModalHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.likesModalClose {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #65676b;
+}
+
+.likesModalBody {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.likesModalList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.likesModalItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.likesModalItem img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.likesModalItem span {
+  font-weight: 600;
+  color: #050505;
+  font-size: 15px;
+}

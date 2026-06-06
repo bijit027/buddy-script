@@ -1,0 +1,174 @@
+.commentMain {
+  margin-bottom: 16px;
+}
+
+.commentMain.reply {
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+.commentImage img {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.commentImage.reply img {
+  width: 28px;
+  height: 28px;
+}
+
+.commentArea {
+  width: 100%;
+}
+
+.commentDetails {
+  margin-bottom: 4px;
+}
+
+.commentDetails.reply {
+  border-radius: 16px;
+  background: #f0f2f5;
+  padding: 8px 12px;
+}
+
+.commentDetailsTop {
+  margin-bottom: 4px;
+}
+
+.commentNameTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #050505;
+}
+
+.commentNameTitle.reply {
+  font-size: 13px;
+}
+
+.commentStatusText {
+  font-size: 14px;
+  color: #050505;
+}
+
+.commentStatusText.reply {
+  font-size: 14px;
+}
+
+.commentActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 13px;
+  color: #65676b;
+  margin-bottom: 12px;
+  padding-left: 8px;
+}
+
+.commentActions.reply {
+  font-size: 12px;
+}
+
+.commentActions button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #65676b;
+  font-weight: 400;
+}
+
+.commentActions button:hover {
+  color: #1877f2;
+}
+
+.commentActions button.liked {
+  color: #1877f2;
+  font-weight: 600;
+}
+
+.commentActions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.repliesList {
+  margin-top: 8px;
+}
+
+.replyForm {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.replyForm img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.replyForm input {
+  flex: 1;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid #ccd0d5;
+  font-size: 13px;
+  background: #f0f2f5;
+  outline: none;
+}
+
+.replyForm input:focus {
+  border-color: #1877f2;
+}
+
+.replyForm button {
+  background: #1877f2;
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.replyForm button:hover {
+  background: #166fe5;
+}
+
+.replyForm button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.likeAvatars {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  padding-right: 16px;
+}
+
+.likeAvatars img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #fff;
+  position: relative;
+}
+
+.likeAvatars img.reply {
+  width: 14px;
+  height: 14px;
+}
+
+.likeAvatars span {
+  margin-left: 4px;
+  font-size: 12px;
+}
+
+.likeAvatars span.reply {
+  font-size: 11px;
+}

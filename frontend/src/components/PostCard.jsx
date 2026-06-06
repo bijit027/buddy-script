@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { postService } from '../services/api';
 import CommentCard from './CommentCard';
+import styles from '../../public/assets/css/PostCard.module.css';
 
 export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCommentAdded }) {
   const { user } = useAuth();
@@ -201,12 +202,12 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
   };
 
   return (
-    <div className="_feed_inner_timeline_post_area _b_radious6 _padd_b24 _padd_t24 _mar_b16" style={{ opacity: isDeleting ? 0.5 : 1 }}>
+    <div className={`_feed_inner_timeline_post_area _b_radious6 _padd_b24 _padd_t24 _mar_b16 ${styles.postContainer} ${isDeleting ? styles.deleting : ''}`}>
       <div className="_feed_inner_timeline_content _padd_r24 _padd_l24">
         <div className="_feed_inner_timeline_post_top">
           <div className="_feed_inner_timeline_post_box">
             <div className="_feed_inner_timeline_post_box_image">
-              <img src={post.user.avatar} alt={post.user.name} className="_post_img" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover' }} />
+              <img src={post.user.avatar} alt={post.user.name} className={`_post_img ${styles.postImage}`} />
             </div>
             <div className="_feed_inner_timeline_post_box_txt">
               <h4 className="_feed_inner_timeline_post_box_title">{post.user.name}</h4>
@@ -215,7 +216,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
                 {isOwner && (
                   <>
                     {' · '}
-                    <span className={`_post_visibility_badge${post.is_public ? '' : ' _post_visibility_badge--private'}`}>
+                    <span className={`${styles.visibilityBadge} ${!post.is_public ? styles.private : ''}`}>
                       {post.is_public ? 'Public' : 'Private'}
                     </span>
                   </>
@@ -228,7 +229,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
             <div className="_post_actions" ref={menuRef}>
               <button
                 type="button"
-                className="_post_actions_trigger"
+                className={`_post_actions_trigger ${styles.postActionsTrigger}`}
                 onClick={() => setShowMenu((prev) => !prev)}
                 aria-expanded={showMenu}
                 aria-label="Post options"
@@ -241,8 +242,8 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
                 </svg>
               </button>
 
-              <div className={`_post_actions_menu${showMenu ? ' _post_actions_menu--open' : ''}`}>
-                <button type="button" className="_post_actions_item" onClick={handleStartEdit}>
+              <div className={`${styles.postActionsMenu} ${showMenu ? styles.open : ''}`}>
+                <button type="button" className={styles.postActionsItem} onClick={handleStartEdit}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 18 18" aria-hidden="true">
                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12.75 2.25l3 3L6.75 14.25 3 15l.75-3.75L12.75 2.25z" />
                   </svg>
@@ -250,7 +251,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
                 </button>
                 <button
                   type="button"
-                  className="_post_actions_item"
+                  className={styles.postActionsItem}
                   onClick={handleToggleVisibility}
                   disabled={isTogglingVisibility}
                 >
@@ -263,7 +264,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
                   </svg>
                   {post.is_public ? 'Make private' : 'Make public'}
                 </button>
-                <button type="button" className="_post_actions_item _post_actions_item--danger" onClick={handleDeleteClick}>
+                <button type="button" className={`${styles.postActionsItem} ${styles.danger}`} onClick={handleDeleteClick}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                     <path
                       stroke="currentColor"
@@ -281,19 +282,19 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
         </div>
 
         {isEditing ? (
-          <div className="_post_edit_form">
+          <div className={styles.postEditForm}>
             <textarea
-              className="form-control _post_edit_textarea"
+              className={`form-control _post_edit_textarea ${styles.postEditTextarea}`}
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
               disabled={isSaving}
               rows={3}
             />
-            <div className="_post_edit_actions">
-              <button type="button" className="_post_edit_btn _post_edit_btn--ghost" onClick={handleCancelEdit} disabled={isSaving}>
+            <div className={styles.postEditActions}>
+              <button type="button" className={`${styles.postEditBtn} ${styles.ghost}`} onClick={handleCancelEdit} disabled={isSaving}>
                 Cancel
               </button>
-              <button type="button" className="_post_edit_btn _post_edit_btn--primary" onClick={handleSaveEdit} disabled={isSaving || !editContent.trim()}>
+              <button type="button" className={`${styles.postEditBtn} ${styles.primary}`} onClick={handleSaveEdit} disabled={isSaving || !editContent.trim()}>
                 {isSaving ? 'Saving…' : 'Save'}
               </button>
             </div>
@@ -304,14 +305,14 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
 
         {post.image && (
           <div className="_feed_inner_timeline_image" style={{ marginTop: 16 }}>
-            <img src={post.image} alt="Post" className="_time_img" style={{ width: '100%', borderRadius: 8 }} />
+            <img src={post.image} alt="Post" className={`_time_img ${styles.postImageDisplay}`} />
           </div>
         )}
       </div>
 
-      <div className="_feed_inner_timeline_total_reacts _padd_r24 _padd_l24 _mar_b26" style={{ marginTop: 16 }}>
+      <div className={`_feed_inner_timeline_total_reacts _padd_r24 _padd_l24 _mar_b26 ${styles.reactsSection}`}>
         {post.likes_count > 0 ? (
-          <div className="_feed_inner_timeline_total_reacts_image" onClick={fetchLikes} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+          <div className={`_feed_inner_timeline_total_reacts_image ${styles.reactsImage}`} onClick={fetchLikes}>
             {post.recent_likes && post.recent_likes.length > 0 ? (
               <>
                 {post.recent_likes.map((liker, idx) => (
@@ -320,16 +321,14 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
                     src={liker.avatar}
                     alt={liker.name}
                     title={liker.name}
-                    className="_react_img"
+                    className={`_react_img ${styles.reactImg}`}
                     style={{
-                      objectFit: 'cover',
-                      position: 'relative',
                       zIndex: post.recent_likes.length - idx,
                       marginLeft: idx === 0 ? 0 : -16,
                     }}
                   />
                 ))}
-                <span style={{ marginLeft: 8, fontSize: 14, color: '#65676b' }}>
+                <span className={styles.reactsText}>
                   Liked by <strong>{post.recent_likes[0].name}</strong> {post.likes_count > 1 ? `and ${post.likes_count - 1} others` : ''}
                 </span>
               </>
@@ -338,7 +337,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
             )}
           </div>
         ) : null}
-        <div className="_feed_inner_timeline_total_reacts_txt" style={post.likes_count === 0 ? { marginLeft: 'auto' } : undefined}>
+        <div className={`_feed_inner_timeline_total_reacts_txt ${post.likes_count === 0 ? styles.empty : ''}`}>
           <p className="_feed_inner_timeline_total_reacts_para1">
             <a href="#0" onClick={(e) => { e.preventDefault(); handleToggleComments(); }}><span>{post.comments_count}</span> Comment{post.comments_count !== 1 ? 's' : ''}</a>
           </p>
@@ -347,10 +346,9 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
 
       <div className="_feed_inner_timeline_reaction">
         <button
-          className={`_feed_inner_timeline_reaction_emoji _feed_reaction ${post.is_liked_by_me ? '_feed_reaction_active' : ''}`}
+          className={`_feed_inner_timeline_reaction_emoji _feed_reaction ${post.is_liked_by_me ? '_feed_reaction_active' : ''} ${styles.reactionButton} ${post.is_liked_by_me ? styles.active : ''}`}
           onClick={handleLike}
           disabled={isLiking}
-          style={{ color: post.is_liked_by_me ? '#1877f2' : 'inherit', fontWeight: post.is_liked_by_me ? 600 : 400 }}
         >
           <span className="_feed_inner_timeline_reaction_link">
             <span>
@@ -365,7 +363,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
             </span>
           </span>
         </button>
-        <button className="_feed_inner_timeline_reaction_comment _feed_reaction" onClick={handleToggleComments}>
+        <button className={`_feed_inner_timeline_reaction_comment _feed_reaction ${styles.reactionButton}`} onClick={handleToggleComments}>
           <span className="_feed_inner_timeline_reaction_link">
             <span>
               <svg className="_reaction_svg" xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21">
@@ -379,34 +377,33 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
       </div>
 
       {showComments && (
-        <div className="_feed_inner_timeline_cooment_area" style={{ marginTop: 16 }}>
+        <div className={`_feed_inner_timeline_cooment_area ${styles.commentSection}`}>
           <div className="_feed_inner_comment_box">
-            <form className="_feed_inner_comment_box_form" onSubmit={handleAddComment}>
-              <div className="_feed_inner_comment_box_content">
+            <form className={`_feed_inner_comment_box_form ${styles.commentBoxForm}`} onSubmit={handleAddComment}>
+              <div className={`_feed_inner_comment_box_content ${styles.commentBoxContent}`}>
                 <div className="_feed_inner_comment_box_content_image">
                   <img
                     src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=4f46e5&color=fff`}
                     alt={user?.name}
-                    className="_comment_img"
+                    className={`_comment_img ${styles.commentBoxContentImage}`}
                   />
                 </div>
                 <div className="_feed_inner_comment_box_content_txt" style={{ flex: 1 }}>
                   <textarea
-                    className="form-control _comment_textarea"
+                    className={`form-control _comment_textarea ${styles.commentTextarea}`}
                     placeholder="Write a comment..."
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     disabled={isSubmittingComment}
-                    style={{ height: 44, paddingTop: 10, borderRadius: 20 }}
+                    style={{ height: 44, paddingTop: 10 }}
                   ></textarea>
                 </div>
               </div>
-              <div className="_feed_inner_comment_box_icon" style={{ display: 'flex', alignItems: 'center' }}>
+              <div className={`_feed_inner_comment_box_icon ${styles.commentBoxIcon}`}>
                 <button
                   type="submit"
-                  className="_feed_inner_comment_box_icon_btn"
+                  className={`_feed_inner_comment_box_icon_btn ${styles.commentBoxIconBtn}`}
                   disabled={isSubmittingComment || !newComment.trim()}
-                  style={{ background: 'none', border: 'none', padding: '0 8px', color: '#1877f2', fontWeight: 600 }}
                 >
                   Post
                 </button>
@@ -414,9 +411,9 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
             </form>
           </div>
 
-          <div className="_timline_comment_main" style={{ marginTop: 16, padding: '0 16px' }}>
+          <div className={`_timline_comment_main ${styles.timelineCommentMain}`}>
             {isLoadingComments ? (
-              <div style={{ textAlign: 'center', padding: 20 }}><span className="_spinner" style={{ width: 24, height: 24, display: 'inline-block' }} /></div>
+              <div style={{ textAlign: 'center', padding: 20 }}><span className={styles.spinner} /></div>
             ) : comments.length === 0 ? (
               <p style={{ textAlign: 'center', color: '#65676b', fontSize: 14 }}>No comments yet.</p>
             ) : (
@@ -433,20 +430,20 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
       )}
 
       {showDeleteModal && (
-        <div className="_confirm_modal_backdrop" onClick={() => setShowDeleteModal(false)}>
-          <div className="_confirm_modal" onClick={(e) => e.stopPropagation()}>
-            <div className="_confirm_modal_header">
-              <h3 className="_confirm_modal_title">Delete Post?</h3>
-              <button className="_confirm_modal_close" onClick={() => setShowDeleteModal(false)}>&times;</button>
+        <div className={styles.confirmModalBackdrop} onClick={() => setShowDeleteModal(false)}>
+          <div className={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.confirmModalHeader}>
+              <h3 className={styles.confirmModalTitle}>Delete Post?</h3>
+              <button className={styles.confirmModalClose} onClick={() => setShowDeleteModal(false)}>&times;</button>
             </div>
-            <div className="_confirm_modal_body">
+            <div className={styles.confirmModalBody}>
               Are you sure you want to delete this post? This action cannot be undone.
             </div>
-            <div className="_confirm_modal_footer">
-              <button onClick={() => setShowDeleteModal(false)} className="_post_edit_btn _post_edit_btn--ghost">
+            <div className={styles.confirmModalFooter}>
+              <button onClick={() => setShowDeleteModal(false)} className={`${styles.postEditBtn} ${styles.ghost}`}>
                 Cancel
               </button>
-              <button onClick={confirmDelete} className="_post_edit_btn _post_edit_btn--primary _confirm_modal_btn_delete">
+              <button onClick={confirmDelete} className={`${styles.postEditBtn} ${styles.primary} ${styles.danger}`}>
                 Delete
               </button>
             </div>
@@ -455,23 +452,23 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
       )}
 
       {showLikesModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ background: '#fff', borderRadius: 8, width: 400, maxWidth: '90%', maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e5e5', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>Likes</h3>
-              <button onClick={() => setShowLikesModal(false)} style={{ background: 'none', border: 'none', fontSize: 24, cursor: 'pointer', color: '#65676b' }}>&times;</button>
+        <div className={styles.likesModal}>
+          <div className={styles.likesModalContent}>
+            <div className={styles.likesModalHeader}>
+              <h3>Likes</h3>
+              <button onClick={() => setShowLikesModal(false)} className={styles.likesModalClose}>&times;</button>
             </div>
-            <div style={{ padding: 20, overflowY: 'auto' }}>
+            <div className={styles.likesModalBody}>
               {isLoadingLikes ? (
                 <div style={{ textAlign: 'center', padding: 20, color: '#65676b' }}>Loading...</div>
               ) : fullLikesList.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: 20, color: '#65676b' }}>No likes yet.</div>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div className={styles.likesModalList}>
                   {fullLikesList.map(liker => (
-                    <div key={liker.id} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <img src={liker.avatar} alt={liker.name} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />
-                      <span style={{ fontWeight: 600, color: '#050505', fontSize: 15 }}>{liker.name}</span>
+                    <div key={liker.id} className={styles.likesModalItem}>
+                      <img src={liker.avatar} alt={liker.name} />
+                      <span>{liker.name}</span>
                     </div>
                   ))}
                 </div>

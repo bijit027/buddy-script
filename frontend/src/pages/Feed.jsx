@@ -8,6 +8,7 @@ import PostCard from '../components/PostCard';
 import RightSidebar from '../components/RightSidebar';
 import { postService } from '../services/api';
 import { useDarkMode } from '../hooks/useDarkMode';
+import styles from '../../public/assets/css/Feed.module.css';
 
 export default function Feed() {
   const { ref, inView } = useInView();
@@ -188,11 +189,11 @@ export default function Feed() {
                           {/* Loading indicator for next page */}
                           <div ref={ref} style={{ textAlign: 'center', padding: 20 }}>
                             {isFetchingNextPage ? (
-                              <span className="_spinner" style={{ display: 'inline-block', width: 24, height: 24 }} />
+                              <span className={styles.feedSpinner} />
                             ) : hasNextPage ? (
-                              <span style={{ color: '#65676b' }}>Load more</span>
+                              <span className={styles.loadMoreText}>Load more</span>
                             ) : (
-                              <span style={{ color: '#65676b' }}>You&apos;ve reached the end!</span>
+                              <span className={styles.loadMoreText}>You&apos;ve reached the end!</span>
                             )}
                           </div>
                         </>
