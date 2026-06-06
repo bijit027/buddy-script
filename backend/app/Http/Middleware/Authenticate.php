@@ -7,14 +7,12 @@ use Illuminate\Http\Request;
 
 class Authenticate extends Middleware
 {
+    /**
+     * Never redirect in API context.
+     * API should always return JSON 401 instead.
+     */
     protected function redirectTo(Request $request): ?string
     {
-        // API requests should never redirect anywhere
-        if ($request->expectsJson() || $request->is('api/*')) {
-            return null;
-        }
-
-        // Web requests (only if you actually use Blade auth pages)
         return null;
     }
 }
