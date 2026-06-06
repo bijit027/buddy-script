@@ -31,6 +31,9 @@ RUN mkdir -p storage/framework/{sessions,views,cache} \
     storage/logs bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
+# Create storage link for serving uploaded files
+RUN php artisan storage:link
+
 # Expose port
 EXPOSE 8080
 
