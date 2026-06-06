@@ -9,11 +9,8 @@ return [
     'allowed_origins' => [
         'http://localhost:5173',
         'http://localhost:5174',
-        'https://buddy-script-psi.vercel.app',
-        'https://buddy-script-production-9a01.up.railway.app',
+        'https://buddy-script-psi.vercel.app'
     ],
-
-    'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
 
@@ -21,6 +18,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => true,
+    'supports_credentials' => false,
 
 ];
