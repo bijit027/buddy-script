@@ -1929,9 +1929,14 @@
     font-size: 14px;
     line-height: 21px;
     color: #000000;
-    background:transparent;
-    border:none;
+    background: transparent;
+    border: none;
 }
+._feed_inner_timeline_reaction_link span {
+    display: flex;
+    gap: 5px;
+}
+
 ._feed_reaction:hover {
     background:#e4f1fd;
 }
