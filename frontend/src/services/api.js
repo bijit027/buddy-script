@@ -68,7 +68,8 @@ export const postService = {
 
   updatePost: (id, data) => {
     if (data instanceof FormData) {
-      return api.put(`/posts/${id}`, data, {
+      data.append('_method', 'PUT');
+      return api.post(`/posts/${id}`, data, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     }
