@@ -44,7 +44,7 @@ class PostController extends Controller
             return $post;
         });
 
-        return PostResource::collection($posts);
+        return response()->json(PostResource::collection($posts)->response()->getData(true));
     }
 
     /**
@@ -82,7 +82,7 @@ class PostController extends Controller
         $post->load('user');
 
         $post->is_liked_by_me = false;
-        return response()->json(new PostResource($post), 201);
+        return response()->json((new PostResource($post))->resolve(), 201);
     }
 
     /**
@@ -131,7 +131,7 @@ class PostController extends Controller
             ->exists();
 
         $post->is_liked_by_me = $isLiked;
-        return response()->json(new PostResource($post));
+        return response()->json((new PostResource($post))->resolve());
     }
 
     /**
@@ -204,7 +204,7 @@ class PostController extends Controller
 
         $likes = $post->likes()->with('user')->latest()->get()->pluck('user');
 
-        return UserResource::collection($likes);
+        return response()->json(UserResource::collection($likes)->resolve());
     }
 
     /**
@@ -230,7 +230,7 @@ class PostController extends Controller
         $comment->load('user');
 
         $comment->is_liked_by_me = false;
-        return response()->json(new CommentResource($comment), 201);
+        return response()->json((new CommentResource($comment))->resolve(), 201);
     }
 
     /**
@@ -267,6 +267,6 @@ class PostController extends Controller
             });
         });
 
-        return CommentResource::collection($comments);
+        return response()->json(CommentResource::collection($comments)->resolve());
     }
 }
