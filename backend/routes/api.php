@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register'])
     ->middleware('throttle:5,1');
 Route::post('/login', [AuthController::class, 'login'])
-    ->middleware('throttle:5,1'); // 5 attempts per minute per IP
+    ->middleware('throttle:5,1');
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -20,18 +20,21 @@ Route::middleware('auth:sanctum')->group(function () {
     // Posts
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/posts', [PostController::class, 'store'])
-        ->middleware('throttle:5,1');
+        ->middleware('throttle:20,1');
     Route::put('/posts/{post}', [PostController::class, 'update']);
     Route::delete('/posts/{post}', [PostController::class, 'destroy']);
     Route::post('/posts/{post}/like', [PostController::class, 'like'])
-        ->middleware('throttle:5,1');
+        ->middleware('throttle:60,1');
     Route::get('/posts/{post}/likes', [PostController::class, 'getLikes']);
     Route::get('/posts/{post}/comments', [PostController::class, 'getComments']);
     Route::post('/posts/{post}/comments', [PostController::class, 'addComment'])
-        ->middleware('throttle:5,1');
+        ->middleware('throttle:30,1');
+
     // Comments
-    Route::post('/comments/{comment}/like', [CommentController::class, 'like']);
-    Route::post('/comments/{comment}/reply', [CommentController::class, 'reply']);
+    Route::post('/comments/{comment}/like', [CommentController::class, 'like'])
+        ->middleware('throttle:60,1');
+    Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])
+        ->middleware('throttle:30,1');
     Route::get('/comments/{comment}/likes', [CommentController::class, 'getLikes']);
 
     // Profile
