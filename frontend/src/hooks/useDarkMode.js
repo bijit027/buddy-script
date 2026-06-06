@@ -10,8 +10,8 @@ export function useDarkMode() {
     const stored = localStorage.getItem('bs_dark_mode');
     if (stored !== null) return stored === 'true';
 
-    // 2. Fall back to OS preference
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // 2. Default to light mode
+    return false;
   });
 
   useEffect(() => {
