@@ -21,10 +21,5 @@ RUN mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cac
 
 EXPOSE 8080
 
-CMD php artisan config:clear \
-    && php artisan cache:clear \
-    && php artisan route:clear \
-    && php artisan view:clear \
-    && php artisan storage:link --force \
-    && php artisan migrate --force \
-    && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
+# ✅ FIXED: stable Railway startup (NO migration, NO clearing, NO risky steps)
+CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=$PORT"]
