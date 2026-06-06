@@ -22,12 +22,19 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(post.content);
+  const [editImage, setEditImage] = useState(null);
+  const [editImagePreview, setEditImagePreview] = useState(null);
+  const [removeImage, setRemoveImage] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isTogglingVisibility, setIsTogglingVisibility] = useState(false);
   const menuRef = useRef(null);
+  const fileRef = useRef(null);
 
   useEffect(() => {
     setEditContent(post.content);
+    setEditImage(null);
+    setEditImagePreview(null);
+    setRemoveImage(false);
   }, [post.content]);
 
   useEffect(() => {
@@ -154,12 +161,43 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
   const handleStartEdit = () => {
     setShowMenu(false);
     setEditContent(post.content);
+    setEditImage(null);
+    setEditImagePreview(null);
+    setRemoveImage(false);
     setIsEditing(true);
   };
 
   const handleCancelEdit = () => {
     setEditContent(post.content);
+    setEditImage(null);
+    setEditImagePreview(null);
+    setRemoveImage(false);
     setIsEditing(false);
+  };
+
+  const handleEditImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be under 5MB.');
+      return;
+    }
+    if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
+      toast.error('Only JPG, PNG and GIF images are allowed.');
+      return;
+    }
+
+    setEditImage(file);
+    setEditImagePreview(URL.createObjectURL(file));
+    setRemoveImage(false);
+  };
+
+  const handleRemoveEditImage = () => {
+    setEditImage(null);
+    setEditImagePreview(null);
+    setRemoveImage(true);
+    if (fileRef.current) fileRef.current.value = '';
   };
 
   const handleSaveEdit = async () => {
@@ -168,14 +206,23 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
       toast.error('Post content cannot be empty.');
       return;
     }
-    if (trimmed === post.content) {
+    if (trimmed === post.content && !editImage && !removeImage) {
       setIsEditing(false);
       return;
     }
 
     setIsSaving(true);
     try {
-      const res = await postService.updatePost(post.id, { content: trimmed });
+      const formData = new FormData();
+      formData.append('content', trimmed);
+      if (editImage) {
+        formData.append('image', editImage);
+      }
+      if (removeImage) {
+        formData.append('remove_image', '1');
+      }
+
+      const res = await postService.updatePost(post.id, formData);
       onUpdate?.(res.data);
       setIsEditing(false);
       toast.success('Post updated.');
@@ -289,7 +336,43 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
               onChange={(e) => setEditContent(e.target.value)}
               disabled={isSaving}
               rows={3}
+              placeholder="What's on your mind?"
             />
+            {(post.image && !removeImage) || editImagePreview ? (
+              <div className={styles.createPostPreview}>
+                <img src={editImagePreview || post.image} alt="Preview" />
+                <button
+                  type="button"
+                  onClick={handleRemoveEditImage}
+                  disabled={isSaving}
+                >
+                  ×
+                </button>
+              </div>
+            ) : (
+              <div className={styles.postEditPhotoArea}>
+                <button
+                  type="button"
+                  className="_feed_inner_text_area_bottom_photo_link"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={isSaving}
+                >
+                  <span className="_feed_inner_text_area_bottom_photo_iamge _mar_img">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 20 20">
+                      <path fill="#666" d="M13.916 0c3.109 0 5.18 2.429 5.18 5.914v8.17c0 3.486-2.072 5.916-5.18 5.916H5.999C2.89 20 .827 17.572.827 14.085v-8.17C.827 2.43 2.897 0 6 0h7.917zm0 1.504H5.999c-2.321 0-3.799 1.735-3.799 4.41v8.17c0 2.68 1.472 4.412 3.799 4.412h7.917c2.328 0 3.807-1.734 3.807-4.411v-8.17c0-2.678-1.478-4.411-3.807-4.411zm.65 8.68l.12.125 1.9 2.147a.803.803 0 01-.016 1.063.642.642 0 01-.894.058l-.076-.074-1.9-2.148a.806.806 0 00-1.205-.028l-.074.087-2.04 2.717c-.722.963-2.02 1.066-2.86.26l-.111-.116-.814-.91a.562.562 0 00-.793-.07l-.075.073-1.4 1.617a.645.645 0 01-.97.029.805.805 0 01-.09-.977l.064-.086 1.4-1.617c.736-.852 1.95-.897 2.734-.137l.114.12.81.905a.587.587 0 00.861.033l.07-.078 2.04-2.718c.81-1.08 2.27-1.19 3.205-.275zM6.831 4.64c1.265 0 2.292 1.125 2.292 2.51 0 1.386-1.027 2.511-2.292 2.511S4.54 8.537 4.54 7.152c0-1.386 1.026-2.51 2.291-2.51zm0 1.504c-.507 0-.918.451-.918 1.007 0 .555.411 1.006.918 1.006.507 0 .919-.451.919-1.006 0-.556-.412-1.007-.919-1.007z"/>
+                    </svg>
+                  </span>
+                  Photo
+                </button>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/gif"
+                  onChange={handleEditImageChange}
+                  className={styles.hiddenFileInput}
+                />
+              </div>
+            )}
             <div className={styles.postEditActions}>
               <button type="button" className={`${styles.postEditBtn} ${styles.ghost}`} onClick={handleCancelEdit} disabled={isSaving}>
                 Cancel
@@ -303,7 +386,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
           <h4 className={`_feed_inner_timeline_post_title ${styles.postContent}`}>{post.content}</h4>
         )}
 
-        {post.image && (
+        {post.image && !isEditing && (
           <div className={`_feed_inner_timeline_image ${styles.postImageContainer}`}>
             <img src={post.image} alt="Post" className={`_time_img ${styles.postImageDisplay}`} />
           </div>

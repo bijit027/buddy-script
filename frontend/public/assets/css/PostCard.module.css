@@ -97,6 +97,54 @@
   margin-top: 12px;
 }
 
+.createPostPreview {
+  position: relative;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.createPostPreview img {
+  max-width: 100%;
+  border-radius: 8px;
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.createPostPreview button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s ease;
+}
+
+.createPostPreview button:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.createPostPreview button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.postEditPhotoArea {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
 .postEditTextarea {
   width: 100%;
   padding: 8px 12px;

@@ -16,7 +16,7 @@ class UpdatePostRequest extends FormRequest
         return [
             'content' => ['sometimes', 'required', 'string', 'max:5000'],
             'is_public' => ['sometimes', 'boolean'],
-            'image' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif', 'max:5120'],
+            'image' => ['nullable', 'sometimes', 'file', 'mimes:jpg,jpeg,png,gif', 'max:5120'],
             'remove_image' => ['sometimes', 'boolean'],
         ];
     }

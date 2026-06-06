@@ -66,7 +66,14 @@ export const postService = {
 
   getPostLikes: (id) => api.get(`/posts/${id}/likes`),
 
-  updatePost: (id, data) => api.put(`/posts/${id}`, data),
+  updatePost: (id, data) => {
+    if (data instanceof FormData) {
+      return api.put(`/posts/${id}`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    }
+    return api.put(`/posts/${id}`, data);
+  },
 
   deletePost: (id) => api.delete(`/posts/${id}`),
 
