@@ -240,7 +240,6 @@ ul {
 /*Button*/
 
 ._btn1 {
-    min-width: 280px;
     padding: 12px 24px;
     background: var(--color5);
     border: 1px solid transparent;
@@ -407,6 +406,11 @@ ul {
 
 ._overflow_hidden {
     overflow: hidden;
+}
+
+.navbar-collapse-state {
+    width: fit-content;
+    display: flex;
 }
 
 

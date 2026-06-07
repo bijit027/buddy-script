@@ -33,20 +33,17 @@ export default function Navbar() {
             <img src="/assets/images/logo.svg" alt="Image" className="_nav_logo" />
           </Link>
         </div>
-        <button className="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> 
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <div className="_header_form ms-auto">
-            <form className="_header_form_grp" onSubmit={(e) => e.preventDefault()}>
+                    <form className="_header_form_grp" onSubmit={(e) => e.preventDefault()}>
               <svg className="_header_form_svg" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 17 17">
                 <circle cx="7" cy="7" r="6" stroke="#666" />
                 <path stroke="#666" strokeLinecap="round" d="M16 16l-3-3" />
               </svg>
               <input className="form-control me-2 _inpt1" type="search" placeholder="Search BuddyScript..." aria-label="Search" />
             </form>
+        <div className="navbar-collapse navbar-collapse-state" id="navbarSupportedContent">
+          <div className="_header_form" style={{ margin: '0 auto' }}>
           </div>
-          <ul className="navbar-nav mb-2 mb-lg-0 _header_nav_list ms-auto _mar_r8">
+          <ul className="navbar-nav mb-lg-0 _header_nav_list ms-auto _mar_r8">
             <li className="nav-item _header_nav_item">
               <Link className="nav-link _header_nav_link_active _header_nav_link" aria-current="page" to="/feed">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="21" fill="none" viewBox="0 0 18 21">

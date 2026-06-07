@@ -367,24 +367,6 @@
     ._shape_two {
         display: none;
     }
-    /*--- Desktop Menu ---- */
-    ._header_nav {
-        display: none;
-    }
-    ._layout_mode_swithing_btn {
-        display: none;
-    }
-    /*---- Mobile Menu ----*/
-    ._header_mobile_menu{
-        display: block;
-    }
-    ._header_mobile_menu ._header_form_grp {
-        margin:0;
-    }
-    /*---- Mobile Menu Dropdown -----*/
-    ._mobile_menu_dark ._layout_mode_swithing_btn {
-        display: block;
-    }
     /*---Layout CSS ----*/
     ._layout {
         height: 100%;
@@ -400,6 +382,9 @@
     }
     ._layout_middle_wrap {
         height: 100%;
+    }
+    ._header_form_grp {
+        display: none;
     }
     ._feed_inner_ppl_card {
         display: none;
