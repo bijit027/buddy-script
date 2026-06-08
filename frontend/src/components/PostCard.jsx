@@ -393,7 +393,7 @@ export default function PostCard({ post, onDelete, onUpdate, onLikeToggle, onCom
         )}
       </div>
 
-      <div className={`_feed_inner_timeline_total_reacts _padd_r24 _padd_l24 _mar_b26 ${styles.reactsSection}`}>
+      <div className={`_feed_inner_timeline_total_reacts _padd_r24 _padd_l24 _mar_b26 _mar_l15 ${styles.reactsSection}`}>
         {post.likes_count > 0 ? (
           <div className={`_feed_inner_timeline_total_reacts_image ${styles.reactsImage}`} onClick={fetchLikes}>
             {post.recent_likes && post.recent_likes.length > 0 ? (
